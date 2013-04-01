@@ -12,14 +12,9 @@
     ],
     "require": {
         "php": ">=5.3.3",
-  	"themattharris/tmhoauth": "dev-master"
+        "themattharris/tmhoauth": "0.7.*"
     },
     "autoload": {
         "psr-0": { "TTools": "src/" }
-    },
-    "extra": {
-        "branch-alias": {
-            "dev-master": "1.0.x-dev"
-        }
     }
 }
