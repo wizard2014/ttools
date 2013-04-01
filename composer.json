@@ -16,7 +16,7 @@
     },
     "require": {
         "php": ">=5.3.3",
-        "erikaheidi/tmhoauth": "0.7.*"
+        "themattharris/tmhoauth": "dev-ttools"
     },
     "autoload": {
         "psr-0": { "TTools": "src/" }
