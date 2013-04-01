@@ -1,0 +1,25 @@
+{
+    "name": "ttools/ttools",
+    "description": "A Twitter API wrapper library",
+    "keywords": ["twitter"],
+    "homepage": "http://ttools.github.com",
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "Erika Heidi",
+            "email": "erika@erikaheidi.com"
+        }
+    ],
+    "require": {
+        "php": ">=5.3.3",
+  	"themattharris/tmhoauth": "dev-master"
+    },
+    "autoload": {
+        "psr-0": { "TTools": "src/" }
+    },
+    "extra": {
+        "branch-alias": {
+            "dev-master": "1.0.x-dev"
+        }
+    }
+}

@@ -1,0 +1,5 @@
+.buildpath
+.project
+composer.phar
+vendor
+demos
