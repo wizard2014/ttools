@@ -12,9 +12,16 @@
     ],
     "repositories": [
         {
-            "type": "vcs",
-            "url": "https://github.com/erikaheidi/tmhOAuth.git"
-        }
+            "type": "package",
+            "package": {
+                "name": "themattharris/tmhoauth",
+                "version": "dev-ttools",
+                "dist": {
+                    "url": "https://github.com/erikaheidi/tmhOAuth.git",
+                    "type": "git"
+                },
+            },
+        },
     ],
     "require": {
         "themattharris/tmhoauth": "dev-ttools"
