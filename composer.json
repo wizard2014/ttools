@@ -10,9 +10,13 @@
             "email": "erika@erikaheidi.com"
         }
     ],
+    "repositories": {
+        "type": "vcs",
+        "url": "https://github.com/erikaheidi/tmhOAuth.git"
+    },
     "require": {
         "php": ">=5.3.3",
-        "themattharris/tmhoauth": "0.7.*"
+        "erikaheidi/tmhoauth": "0.7.*"
     },
     "autoload": {
         "psr-0": { "TTools": "src/" }

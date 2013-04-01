@@ -2,6 +2,8 @@
 
 namespace TTools;
 
+use themattharris\tmhoauth;
+
 class TTools
 {
     private $consumer_key;
@@ -117,7 +119,7 @@ class TTools
             'user_agent'=> 'ttools ' . self::VERSION . ' - github.com/erikaheidi/ttools',
           );
         
-        $oauth = new \OAuth\tmhOAuth($config);
+        $oauth = new tmhOAuth($config);
         
         $req = $oauth->request($method, $oauth->url($url), $params);
         

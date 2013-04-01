@@ -25,10 +25,26 @@ class App implements TToolsApp {
         $this->current_user = $this->getUser();
     }
 
+    public function isLogged()
+    {
+        return count($this->current_user);
+    }
+
+    public function getLoginUrl()
+    {
+        $result = $this->ttools->getAuthorizeUrl();
+        /* we need to store the token secret for the next request, 
+         * after a user has authorized your app         
+         */
+        $_SESSION['request_secret'] = $result['secret'];
+       
+        $auth_link = $result['auth_url'];
+    }
+
     public function getUser()
     {
         if ($this->ttools->getState()) {
-            return $ttools->makeRequest('/' . TTools::API_VERSION .'/users/show.json',array("screen_name"=>$this->current_user));
+            return $this->ttools->makeRequest('/' . TTools::API_VERSION .'/users/show.json',array("screen_name"=>$this->current_user));
         } else {
                 /* check if there is a user comming from auth page on twitter */
             $user = array();
@@ -46,7 +62,7 @@ class App implements TToolsApp {
         return $user;
     }
 
-	function storeRequestSecret($user_id, $request_secret)
+	function storeRequestSecret($request_token, $request_secret)
 	{
         switch ($this->default_storage) {
             case self::TT_STORAGE_DB:
@@ -58,6 +74,7 @@ class App implements TToolsApp {
             case self::TT_STORAGE_SESSION:
             default:
                 /* SESSION storage is default */
+                $_SESSION['last_token'] = $request_token;
                 $_SESSION['last_secret'] = $request_secret; 
 
         }
