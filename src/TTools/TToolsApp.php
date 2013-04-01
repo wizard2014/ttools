@@ -4,8 +4,7 @@ namespace TTools;
 
 interface TToolsApp {
 
+	function storeRequestSecret($user_id, $request_secret);
 
-	private function storeRequestSecret($user_id, $request_secret);
-
-    private function getRequestSecret($user_id);
+    function getRequestSecret();
 }

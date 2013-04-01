@@ -6,9 +6,9 @@ use \TTools\TTools;
 
 class App implements TToolsApp {
 
-    private var $ttools;
-    private var $default_storage = 1;
-    private var $current_user;
+    private $ttools;
+    private $default_storage;
+    private $current_user;
 
     const TT_STORAGE_SESSION = 1;
     const TT_STORAGE_FILE    = 2;
@@ -19,6 +19,8 @@ class App implements TToolsApp {
         $this->ttools = new TTools($config);
         if ($storage !== null)
             $this->default_storage = $storage;
+        else
+            $this->default_storage = self::TT_STORAGE_SESSION;
 
         $this->current_user = $this->getUser();
     }
@@ -31,12 +33,8 @@ class App implements TToolsApp {
                 /* check if there is a user comming from auth page on twitter */
             $user = array();
             if (!empty($_REQUEST['oauth_token'])) {
-            
-                /* if so, is time to ask for the access tokens.
-                 * use the request_secret we stored before
-                 * to make the request 
-                 * the method returns a user array with access tokens, id and screen name*/
-                $secret = $this->getRequestSecret()
+
+                $secret = $this->getRequestSecret();
                 $user = $this->ttools->getAccessTokens($_REQUEST['oauth_token'], $secret);
               
                 if (!empty($user['access_token'])) {
@@ -48,7 +46,7 @@ class App implements TToolsApp {
         return $user;
     }
 
-	private function storeRequestSecret($user_id, $request_secret)
+	function storeRequestSecret($user_id, $request_secret)
 	{
         switch ($this->default_storage) {
             case self::TT_STORAGE_DB:
@@ -65,7 +63,7 @@ class App implements TToolsApp {
         }
 	}
 
-    private function getRequestSecret()
+    function getRequestSecret()
     {
         switch ($this->default_storage) {
             case self::TT_STORAGE_DB:
@@ -82,5 +80,4 @@ class App implements TToolsApp {
         }
     }
 
-    private function saveSession($data);
 }
