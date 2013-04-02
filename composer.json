@@ -17,7 +17,7 @@
         }
     ],
     "require": {
-        "themattharris/tmhoauth": "dev-ttools"
+        "themattharris/tmhoauth": "dev-ttools@dev"
     },
     "autoload": {
         "psr-0": { "TTools": "src/" }
