@@ -2,8 +2,6 @@
 
 namespace TTools;
 
-use themattharris\tmhoauth;
-
 class TTools
 {
     private $consumer_key;
