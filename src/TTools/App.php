@@ -6,7 +6,7 @@ use \TTools\TTools;
 
 class App implements TToolsApp {
 
-    private $ttools;
+    public $ttools;
     private $default_storage;
     private $current_user;
 
@@ -41,10 +41,20 @@ class App implements TToolsApp {
         $auth_link = $result['auth_url'];
     }
 
+    public function getCurrentUser()
+    {
+        return $this->current_user;
+    }
+
+    public function getLastReqInfo()
+    {
+        return $this->ttools->getLastReqInfo();
+    }
+
     public function getUser()
     {
         if ($this->ttools->getState()) {
-            return $this->ttools->makeRequest('/' . TTools::API_VERSION .'/users/show.json',array("screen_name"=>$this->current_user));
+            return $this->ttools->makeRequest('/' . TTools::API_VERSION .'/account/verify_credentials.json');
         } else {
                 /* check if there is a user comming from auth page on twitter */
             $user = array();

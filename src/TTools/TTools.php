@@ -55,7 +55,7 @@ class TTools
         $this->access_token = $at;
         $this->access_token_secret = $ats;
     }
-    
+
     public function getAuthorizeUrl()
     {
     
@@ -119,10 +119,13 @@ class TTools
             'user_agent'=> 'ttools ' . self::VERSION . ' - github.com/erikaheidi/ttools',
           );
         
-        $oauth = new tmhOAuth($config);
+        $oauth = new \tmhOAuth\tmhOAuth($config);
         
         $req = $oauth->request($method, $oauth->url($url), $params);
-        
+
+        if (!$req)
+            return array('code' => "666");
+
         $this->last_req_info = array (
             'path' => $url,
             'response_code' => $oauth->response['code'],
