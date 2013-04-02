@@ -66,6 +66,7 @@ class TTools
             return array(
                 'auth_url' => self::REQ_BASE . self::AUTH_PATH . '?oauth_token=' . $tokens['oauth_token'],
                 'secret'   => $tokens['oauth_token_secret'],
+                'token'    => $tokens['oauth_token']
             );
             
          } else {
@@ -155,33 +156,6 @@ class TTools
     public function getLastReqInfo()
     {
         return $this->last_req_info; 
-    }
-    
-    public function getTimeline($limit = 10)
-    {
-    	return $this->makeRequest('/' . self::API_VERSION .'/statuses/home_timeline.json',array("count"=>$limit));
-    }
-    
-    public function getUserTimeline($user_id = null, $screen_name = null, $limit = 10)
-    {
-        return $this->makeRequest(
-            '/' . self::API_VERSION .'/statuses/user_timeline.json',
-            array(
-                "count"=>$limit,
-                "user_id"  => $user_id,
-                "screen_name" => $screen_name,
-            )
-        );
-    }
-    
-    public function getMentions($limit = 10)
-    {
-    	return $this->makeRequest('/' . self::API_VERSION .'/statuses/mentions_timeline.json',array("count"=>$limit));
-    }
-    
-    public function getFavorites($limit = 10)
-    {
-        return $this->makeRequest('/' . self::API_VERSION .'/favorites/list.json',array("count"=>$limit));
     }
 
 }

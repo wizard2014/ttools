@@ -4,7 +4,7 @@ namespace TTools;
 
 use \TTools\TTools;
 
-class App implements TToolsApp {
+class App extends TToolsApp {
 
     public $ttools;
     private $default_storage;
