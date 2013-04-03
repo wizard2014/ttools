@@ -2,7 +2,7 @@
     "name": "ttools/ttools",
     "description": "A Twitter API wrapper library",
     "keywords": ["twitter"],
-    "homepage": "http://ttools.github.com",
+    "homepage": "http://erikaheidi.github.com/ttools",
     "license": "MIT",
     "authors": [
         {
