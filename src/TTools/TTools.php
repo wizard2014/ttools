@@ -70,7 +70,7 @@ class TTools
             );
             
          } else {
-            return 0;
+            return $result;
          }
 
     }
@@ -120,7 +120,7 @@ class TTools
         
         $oauth = new \tmhOAuth\tmhOAuth($config);
         
-        $req = $oauth->request($method, $oauth->url($url), $params);
+        $req = $oauth->request($method, $oauth->url($url,''), $params);
 
         if (!$req)
             return array('code' => "666");

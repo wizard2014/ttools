@@ -3,11 +3,11 @@ namespace TTools;
 
 use \TTools\TTools;
 
-class TToolsApp {
+abstract class TToolsApp {
     
-    public $ttools;
-    private $default_storage;
-    private $current_user;
+    protected $ttools;
+    protected $default_storage;
+    protected $current_user;
 
     const TT_STORAGE_SESSION = 1;
     const TT_STORAGE_FILE    = 2;
@@ -32,7 +32,8 @@ class TToolsApp {
     public function getLoginUrl()
     {
         $result = $this->ttools->getAuthorizeUrl();
-        $this->storeRequestSecret($result['oauth_token'], $result['oauth_token_secret']);
+        print_r($result);
+        $this->storeRequestSecret($result['token'], $result['secret']);
        
         return $result['auth_url'];
     }
@@ -96,7 +97,7 @@ class TToolsApp {
     }
 
     /* MUST EXTEND AND IMPLEMENT */	
-    abstract function storeRequestSecret($request_token, $request_secret);
+    abstract protected function storeRequestSecret($request_token, $request_secret);
 
-    abstract function getRequestSecret();
+    abstract protected function getRequestSecret();
 }
