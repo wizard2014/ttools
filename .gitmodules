@@ -1,0 +1,3 @@
+[submodule "ttools-demos"]
+	path = ttools-demos
+	url = https://github.com/erikaheidi/ttools-demos
