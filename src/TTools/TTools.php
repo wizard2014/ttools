@@ -75,11 +75,11 @@ class TTools
 
     }
     
-    public function getAccessTokens($request_token,$request_secret)
+    public function getAccessTokens($request_token, $request_secret, $oauth_verifier)
     {
         $this->setUserTokens($request_token, $request_secret);
         
-        $result = $this->OAuthRequest(self::ACCESS_PATH);
+        $result = $this->OAuthRequest(self::ACCESS_PATH, array('oauth_verifier' => $oauth_verifier), 'POST');
        
         if ($result['code'] == 200) {
             
@@ -92,6 +92,13 @@ class TTools
                 'access_token_secret' => $this->access_token_secret,
                 'screen_name'         => $tokens['screen_name'],
                 'user_id'             => $tokens['user_id'],
+            );
+        } else {
+            $response = json_decode($result['response'],1);
+            return array(
+                'error' => $result['code'],
+                'error_message' => $response['errors'][0]['message']
+              
             );
         }
     }

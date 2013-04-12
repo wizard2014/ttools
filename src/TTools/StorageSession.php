@@ -15,7 +15,8 @@ class StorageSession implements StorageProvider {
 
     function getRequestSecret()
     {
-        return $_SESSION['last_secret'];
+        if (isset($_SESSION['last_secret']))
+            return $_SESSION['last_secret'];
     }
 
     function storeLoggedUser($logged_user)
@@ -25,7 +26,8 @@ class StorageSession implements StorageProvider {
 
     function getLoggedUser()
     {
-        return unserialize($_SESSION['logged_user']);
+        if (isset($_SESSION['logged_user']))
+            return unserialize($_SESSION['logged_user']);
     }
 
 }

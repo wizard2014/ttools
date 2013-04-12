@@ -40,7 +40,6 @@ class App {
     public function getLoginUrl()
     {
         $result = $this->ttools->getAuthorizeUrl();
-        //print_r($result);
         $this->storage->storeRequestSecret($result['token'], $result['secret']);
        
         return $result['auth_url'];
@@ -66,11 +65,12 @@ class App {
             );
         } else {
 
-            if (!empty($_REQUEST['oauth_token'])) {
+            if (!empty($_REQUEST['oauth_verifier'])) {
 
                 $secret = $this->storage->getRequestSecret();
-                $user = $this->ttools->getAccessTokens($_REQUEST['oauth_token'], $secret);
-              
+
+                $user = $this->ttools->getAccessTokens($_REQUEST['oauth_token'], $secret, $_REQUEST['oauth_verifier']);
+
                 if (!empty($user['access_token'])) {
                     $this->storage->storeLoggedUser($user);
                     $user = $this->ttools->makeRequest('/' . TTools::API_VERSION .'/account/verify_credentials.json');
