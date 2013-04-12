@@ -8,32 +8,39 @@ class TTools
     private $consumer_secret;
     private $access_token;
     private $access_token_secret;
-	private $state;
+    private $auth_method;
+    private $state;
 	
 	private $last_req_info;
 
-	const VERSION = '1.0.1-dev';
-    const API_VERSION  = '1.1';
-    const REQ_BASE = 'https://api.twitter.com';
-    const AUTH_PATH    = '/oauth/authorize';
-    const REQUEST_PATH = '/oauth/request_token';
-    const ACCESS_PATH  = '/oauth/access_token';
+	const VERSION              = '1.0.1-dev';
+    const API_VERSION          = '1.1';
+    const REQ_BASE             = 'https://api.twitter.com';
+    const REQUEST_PATH         = '/oauth/request_token';
+    const ACCESS_PATH          = '/oauth/access_token';
+
+    const AUTH_METHOD_AUTHORIZE        = '/oauth/authorize';
+    const AUTH_METHOD_AUTHENTICATE     = '/oauth/authenticate';
     
     public function __construct(array $config)
     {
-        $this->consumer_key = $config['consumer_key'];
-        $this->consumer_secret = $config[ 'consumer_secret'];
-        $this->access_token = null;
+        $this->consumer_key        = $config['consumer_key'];
+        $this->consumer_secret     = $config[ 'consumer_secret'];
+        $this->access_token        = null;
         $this->access_token_secret = null;
-        $this->state = 0;
-        $this->last_req_info = array();
+        $this->state               = 0;
+        $this->last_req_info       = array();
         
+        if (isset($config['auth_method'])) {
+            $this->auth_method = $config['auth_method'];
+        } else {
+            $this->auth_method = self::AUTH_METHOD_AUTHENTICATE;
+        }
+
         if (isset($config['access_token']) && isset($config['access_token_secret'])) {
-            $this->access_token = $config['access_token'];
+            $this->access_token        = $config['access_token'];
             $this->access_token_secret = $config['access_token_secret'];
-            $this->state = 2;
-           
-            return;
+            $this->state               = 2;
         }
          
     }
@@ -50,7 +57,7 @@ class TTools
     
     public function setUserTokens($at, $ats)
     {
-        $this->access_token = $at;
+        $this->access_token        = $at;
         $this->access_token_secret = $ats;
     }
 
@@ -64,7 +71,7 @@ class TTools
             $tokens = $this->parseResponse($result['response']);
            
             return array(
-                'auth_url' => self::REQ_BASE . self::AUTH_PATH . '?oauth_token=' . $tokens['oauth_token'],
+                'auth_url' => self::REQ_BASE . $this->auth_method . '?oauth_token=' . $tokens['oauth_token'],
                 'secret'   => $tokens['oauth_token_secret'],
                 'token'    => $tokens['oauth_token']
             );
@@ -118,11 +125,11 @@ class TTools
     private function OAuthRequest($url, $params = array(), $method = 'GET', $callback = null)
     {
         $config = array(
-            'consumer_key' => $this->consumer_key,
+            'consumer_key'    => $this->consumer_key,
             'consumer_secret' => $this->consumer_secret,
-            'user_token' => $this->access_token,
-            'user_secret' => $this->access_token_secret,
-            'user_agent'=> 'ttools ' . self::VERSION . ' - github.com/erikaheidi/ttools',
+            'user_token'      => $this->access_token,
+            'user_secret'     => $this->access_token_secret,
+            'user_agent'      => 'ttools ' . self::VERSION . ' - github.com/erikaheidi/ttools',
           );
         
         $oauth = new \tmhOAuth\tmhOAuth($config);
@@ -133,7 +140,7 @@ class TTools
             return array('code' => "666");
 
         $this->last_req_info = array (
-            'path' => $url,
+            'path'          => $url,
             'response_code' => $oauth->response['code'],
         );
         
@@ -153,7 +160,7 @@ class TTools
         } else {
             $response = json_decode($result['response'],1);
             return array(
-        	    'error' => $result['code'],
+        	    'error'         => $result['code'],
         	    'error_message' => $response['errors'][0]['message']
               
         	);

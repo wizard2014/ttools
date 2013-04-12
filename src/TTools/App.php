@@ -96,8 +96,8 @@ class App {
         return $this->get(
             '/statuses/user_timeline.json',
             array(
-                "count"=>$limit,
-                "user_id"  => $user_id,
+                "count"       => $limit,
+                "user_id"     => $user_id,
                 "screen_name" => $screen_name,
             )
         );
