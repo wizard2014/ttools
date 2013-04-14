@@ -72,10 +72,10 @@ class App {
 
                 $secret = $this->storage->getRequestSecret();
                 $oauth_token = $this->request->get('oauth_token');
-                $user = $this->ttools->getAccessTokens($oauth_token, $secret, $oauth_verifier);
+                $tokens = $this->ttools->getAccessTokens($oauth_token, $secret, $oauth_verifier);
 
-                if (!empty($user['access_token'])) {
-                    $this->storage->storeLoggedUser($user);
+                if (!empty($tokens['access_token'])) {
+                    $this->storage->storeLoggedUser($tokens);
                     $user = $this->getCredentials();
                 }
             }
