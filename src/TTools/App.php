@@ -8,15 +8,21 @@ use \TTools\StorageProvider;
 class App {
 
     private $storage;
+    private $request;
     private $ttools;
     private $current_user;
 
-    public function __construct(array $config, StorageProvider $sp = null)
+    public function __construct(array $config, StorageProvider $sp = null, RequestProvider $rp = null)
     {
         if ($sp !== null)
             $this->storage = $sp;
         else
             $this->storage = new \TTools\StorageSession();
+
+        if ($rp !== null)
+            $this->request = $rp;
+        else
+            $this->request = new \TTools\RequestProvider();
 
         if (!isset($config['access_token'])) {
             /* check if theres a logged user in session */
@@ -29,7 +35,7 @@ class App {
 
         $this->ttools = new TTools($config);
 
-        $this->current_user = $this->getCredentials();
+        $this->current_user = $this->getUser();
     }
 
     public function isLogged()
@@ -55,25 +61,22 @@ class App {
         return $this->ttools->getLastReqInfo();
     }
 
-    public function getCredentials()
+    public function getUser()
     {
         $user = array();
         if ($this->ttools->getState()) {
-            $user = $this->ttools->makeRequest(
-                '/' . TTools::API_VERSION .'/account/verify_credentials.json',
-                array('include_entities' => false, 'skip_status' => true)
-            );
+            $user = $this->getCredentials();
         } else {
-
-            if (!empty($_REQUEST['oauth_verifier'])) {
+            $oauth_verifier = $this->request->get('oauth_verifier');
+            if ($oauth_verifier !== null) {
 
                 $secret = $this->storage->getRequestSecret();
-
-                $user = $this->ttools->getAccessTokens($_REQUEST['oauth_token'], $secret, $_REQUEST['oauth_verifier']);
+                $oauth_token = $this->request->get('oauth_token');
+                $user = $this->ttools->getAccessTokens($oauth_token, $secret, $oauth_verifier);
 
                 if (!empty($user['access_token'])) {
                     $this->storage->storeLoggedUser($user);
-                    $user = $this->ttools->makeRequest('/' . TTools::API_VERSION .'/account/verify_credentials.json');
+                    $user = $this->getCredentials();
                 }
             }
         }
@@ -84,6 +87,13 @@ class App {
     public function get($path, $params)
     {
         return $this->ttools->makeRequest('/' . TTools::API_VERSION . $path, $params);
+    }
+
+    public function getCredentials()
+    {
+        return $this->get('/account/verify_credentials.json',
+            array('include_entities' => false, 'skip_status' => true)
+        );
     }
 
     public function getTimeline($limit = 10)
