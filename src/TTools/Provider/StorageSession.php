@@ -1,8 +1,9 @@
 <?php
 
-namespace TTools;
+namespace TTools\Provider;
 
-use \TTools\TTools;
+use TTools\TTools;
+use TTools\Provider\StorageProvider;
 
 class StorageSession implements StorageProvider {
 

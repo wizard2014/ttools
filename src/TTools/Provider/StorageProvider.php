@@ -1,6 +1,6 @@
 <?php
 
-namespace TTools;
+namespace TTools\Provider;
 
 interface StorageProvider {
 

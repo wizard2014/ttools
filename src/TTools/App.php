@@ -2,8 +2,10 @@
 
 namespace TTools;
 
-use \TTools\TTools;
-use \TTools\StorageProvider;
+use TTools\TTools;
+use TTools\Provider\StorageProvider;
+use TTools\Provider\StorageSession;
+use TTools\Provider\RequestProvider;
 
 class App {
 
@@ -17,12 +19,12 @@ class App {
         if ($sp !== null)
             $this->storage = $sp;
         else
-            $this->storage = new \TTools\StorageSession();
+            $this->storage = new StorageSession();
 
         if ($rp !== null)
             $this->request = $rp;
         else
-            $this->request = new \TTools\RequestProvider();
+            $this->request = new RequestProvider();
 
         if (!isset($config['access_token'])) {
             /* check if theres a logged user in session */
