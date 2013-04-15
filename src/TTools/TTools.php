@@ -122,20 +122,22 @@ class TTools
         return $r;
     }
     
-    private function OAuthRequest($url, $params = array(), $method = 'GET', $callback = null)
+    private function OAuthRequest($url, $params = array(), $method = 'GET', $callback = null, $multipart = false, $overwrite_config = array())
     {
-        $config = array(
-            'consumer_key'    => $this->consumer_key,
-            'consumer_secret' => $this->consumer_secret,
-            'user_token'      => $this->access_token,
-            'user_secret'     => $this->access_token_secret,
-            'user_agent'      => 'ttools ' . self::VERSION . ' - github.com/erikaheidi/ttools',
-          );
+        $config = array_merge(
+            array(
+                'consumer_key'    => $this->consumer_key,
+                'consumer_secret' => $this->consumer_secret,
+                'user_token'      => $this->access_token,
+                'user_secret'     => $this->access_token_secret,
+                'user_agent'      => 'ttools ' . self::VERSION . ' - erikaheidi.github.com/ttools',
+          ), $overwrite_config);
+        
         
         $oauth = new \tmhOAuth\tmhOAuth($config);
         
-        $req = $oauth->request($method, $oauth->url($url,''), $params);
-
+        $req = $oauth->request($method, $oauth->url($url,''), $params, true, $multipart);
+        var_dump($oauth);
         if (!$req)
             return array('code' => "666");
 
@@ -150,9 +152,9 @@ class TTools
             return $oauth->response;
     }
     
-    public function makeRequest($url, $params = array(), $method = 'GET')
+    public function makeRequest($url, $params = array(), $method = 'GET', $multipart = false, $overwrite_config = array())
     {       
-        $result = $this->OAuthRequest($url, $params, $method);
+        $result = $this->OAuthRequest($url, $params, $method, null, $multipart, $overwrite_config);
         if ($result['code'] == 200) {
         
         	return json_decode($result['response'],1);

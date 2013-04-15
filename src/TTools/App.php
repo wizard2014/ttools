@@ -86,9 +86,14 @@ class App {
         return $user;
     }
 
-    public function get($path, $params)
+    public function get($path, $params, $config = array())
     {
-        return $this->ttools->makeRequest('/' . TTools::API_VERSION . $path, $params);
+        return $this->ttools->makeRequest('/' . TTools::API_VERSION . $path, $params, 'GET', $config);
+    }
+
+    public function post($path, $params, $multipart = false, $config = array())
+    {
+        return $this->ttools->makeRequest('/' . TTools::API_VERSION . $path, $params, 'POST', $multipart, $config);
     }
 
     public function getCredentials()
@@ -96,6 +101,11 @@ class App {
         return $this->get('/account/verify_credentials.json',
             array('include_entities' => false, 'skip_status' => true)
         );
+    }
+
+    public function getRemainingCalls()
+    {
+        return $this->get('/account/rate_limit_status.json');
     }
 
     public function getTimeline($limit = 10)
@@ -123,5 +133,31 @@ class App {
     public function getFavorites($limit = 10)
     {
         return $this->get('/favorites/list.json',array("count"=>$limit));
-    }    
+    }  
+
+    public function getTweet($tweet_id)
+    {
+        return $this->get('/statuses/show/' . $tweet_id . '.json');
+    }
+
+    public function update($message, $in_reply_to = null)
+    {
+        $message = strip_tags($message);
+
+        return $this->post('/statuses/update.json', array(
+            'status'      => $message,
+            'in_reply_to_status_id' => $in_reply_to
+        ));
+    }
+
+    public function updateWithMedia($image, $message, $in_reply_to = null)
+    {
+        $meta = getimagesize($image);
+        $message = strip_tags($message);
+
+        return $this->post('/statuses/update_with_media.json', array(
+            'status'  => $message,
+            'media[]' => '@' . $image . ';type=' . $meta['mime']
+        ), true);
+    }
 }
