@@ -137,7 +137,7 @@ class TTools
         $oauth = new \tmhOAuth\tmhOAuth($config);
         
         $req = $oauth->request($method, $oauth->url($url,''), $params, true, $multipart);
-        var_dump($oauth);
+
         if (!$req)
             return array('code' => "666");
 
