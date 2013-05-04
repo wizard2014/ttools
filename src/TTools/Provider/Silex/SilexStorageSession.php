@@ -8,6 +8,10 @@ class SilexStorageSession implements StorageProvider {
 
     private $session;
 
+    const KEY_TOKEN  = 'ttools_last_token';
+    const KEY_SECRET = 'ttols_last_secret';
+    const KEY_USER   = 'ttools_logged_user';
+
     function __construct($session)
     {
         $this->session = $session;
@@ -15,23 +19,29 @@ class SilexStorageSession implements StorageProvider {
 
 	function storeRequestSecret($request_token, $request_secret)
 	{
-        $this->session->set('last_token', $request_token);
-        $this->session->set('last_secret', $request_secret);
+        $this->session->set(self::KEY_TOKEN, $request_token);
+        $this->session->set(self::KEY_SECRET, $request_secret);
 	}
 
     function getRequestSecret()
     {
-        return $this->session->get('last_secret');
+        return $this->session->get(self::KEY_SECRET);
     }
 
     function storeLoggedUser($logged_user)
     {
-        $this->session->set('logged_user', serialize($logged_user));
+        $this->session->set(self::KEY_USER, serialize($logged_user));
     }
 
     function getLoggedUser()
     {
-        return unserialize($this->session->get('logged_user'));
+        return unserialize($this->session->get(self::KEY_USER));
     }
 
+    function logout()
+    {
+        $this->session->unset(self::KEY_USER);
+        $this->session->unset(self::KEY_TOKEN);
+        $this->session->unset(self::KEY_SECRET);
+    }
 }

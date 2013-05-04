@@ -16,15 +16,8 @@ class App {
 
     public function __construct(array $config, StorageProvider $sp = null, RequestProvider $rp = null)
     {
-        if ($sp !== null)
-            $this->storage = $sp;
-        else
-            $this->storage = new StorageSession();
-
-        if ($rp !== null)
-            $this->request = $rp;
-        else
-            $this->request = new RequestProvider();
+        $this->storage = $sp ?: new StorageSession();
+        $this->request = $rp ?: new RequestProvider();
 
         if (!isset($config['access_token'])) {
             /* check if theres a logged user in session */
@@ -86,7 +79,7 @@ class App {
         return $user;
     }
 
-    public function get($path, $params, $config = array())
+    public function get($path, $params = array(), $config = array())
     {
         return $this->ttools->makeRequest('/' . TTools::API_VERSION . $path, $params, 'GET', $config);
     }
@@ -159,5 +152,10 @@ class App {
             'status'  => $message,
             'media[]' => '@' . $image . ';type=' . $meta['mime']
         ), true);
+    }
+
+    public function logout()
+    {
+        return $this->storage->logout();
     }
 }

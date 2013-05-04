@@ -11,4 +11,6 @@ interface StorageProvider {
     function storeLoggedUser($logged_user);
 
     function getLoggedUser();
+
+    function logout();
 }
