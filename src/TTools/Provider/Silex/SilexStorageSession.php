@@ -40,8 +40,8 @@ class SilexStorageSession implements StorageProvider {
 
     function logout()
     {
-        $this->session->unset(self::KEY_USER);
-        $this->session->unset(self::KEY_TOKEN);
-        $this->session->unset(self::KEY_SECRET);
+        $this->session->set(self::KEY_USER, null);
+        $this->session->set(self::KEY_TOKEN, null);
+        $this->session->set(self::KEY_SECRET, null);
     }
 }
