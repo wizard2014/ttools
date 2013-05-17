@@ -14,8 +14,9 @@
         "psr-0": { "TTools": "src/" }
     },
     "require": {
-        "stack/builder": "~1.0-dev",
-        "stack/session": "~1.0-dev",
-        "stack/oauth": "~1.0-dev"
+        "stack/builder": "~1.0@dev",
+        "stack/session": "~1.0@dev",
+        "stack/oauth": "~1.0@dev",
+        "stack/callable-http-kernel": "~1.0@dev"
     }
 }
