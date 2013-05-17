@@ -12,5 +12,8 @@
     ],
     "autoload": {
         "psr-0": { "TTools": "src/" }
+    },
+    "require": {
+        "stack/oauth": "~1.0-dev"
     }
 }
