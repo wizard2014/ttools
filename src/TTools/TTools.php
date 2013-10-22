@@ -31,7 +31,7 @@ class TTools
         $this->state               = 0;
         $this->last_req_info       = array();
 
-        $this->auth_method = $config['auth_method'] ?: self::AUTH_METHOD_AUTHENTICATE;
+        $this->auth_method = isset($config['auth_method']) ? $config['auth_method'] : self::AUTH_METHOD_AUTHENTICATE;
 
         if (isset($config['access_token']) && isset($config['access_token_secret'])) {
             $this->access_token        = $config['access_token'];
@@ -142,10 +142,11 @@ class TTools
             'response_code' => $oauth->response['code'],
         );
         
-        if ($callback !== null)
-            $callback($oauth->response['code'],$oauth->response);
-        else
-            return $oauth->response;
+        if ($callback !== null) {
+            call_user_func($callback, $oauth->response['code'], $oauth->response);
+        }
+
+        return $oauth->response;
     }
     
     public function makeRequest($url, $params = array(), $method = 'GET', $multipart = false, $overwrite_config = array())
