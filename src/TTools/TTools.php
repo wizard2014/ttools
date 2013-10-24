@@ -31,7 +31,7 @@ class TTools
         $this->state               = 0;
         $this->last_req_info       = array();
 
-        $this->auth_method = isset($config['auth_method']) ? $config['auth_method'] : self::AUTH_METHOD_AUTHENTICATE;
+        $this->auth_method = isset($config['auth_method']) ? $config['auth_method'] : self::AUTH_METHOD_AUTHORIZE;
 
         if (isset($config['access_token']) && isset($config['access_token_secret'])) {
             $this->access_token        = $config['access_token'];
