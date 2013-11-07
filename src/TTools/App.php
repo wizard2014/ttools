@@ -79,6 +79,11 @@ class App {
         return $user;
     }
 
+    public function getUserTokens()
+    {
+        return $this->ttools->getUserTokens();
+    }
+
     public function get($path, $params = array(), $config = array())
     {
         return $this->ttools->makeRequest('/' . TTools::API_VERSION . $path, $params, 'GET', $config);

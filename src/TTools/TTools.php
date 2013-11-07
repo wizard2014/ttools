@@ -57,6 +57,11 @@ class TTools
         $this->access_token_secret = $ats;
     }
 
+    public function getUserTokens()
+    {
+        return array($this->access_token, $this->access_token_secret);
+    }
+
     public function getAuthorizeUrl()
     {
     
