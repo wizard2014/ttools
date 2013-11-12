@@ -18,10 +18,11 @@ Add this requirement to your composer.json file:
 </pre>
 
 
-docs
+examples
 =====
 
-[Basic Usage - single user Application](https://github.com/ttools/ttools/blob/master/doc/basic_singleuser.rst)
+- [Basic Usage - single user Application](https://github.com/ttools/ttools/blob/master/doc/basic_singleuser.rst)
+- [Basic multi-user (with auth) Application](https://github.com/ttools/ttools/blob/master/doc/basic_multiuser.rst)
 
 demos
 =====
