@@ -17,8 +17,13 @@ parameters.yml
             access_token: 'USER_ACCESS_TOKEN'
             access_token_secret: 'USER_ACCESS_TOKEN_SECRET'
 
-then, instantiate the TTools object using the Symfony providers (this method should go in a controller):
+then, instantiate the TTools object using the Symfony providers (the method should go in a controller):
 
+    use TTools\Provider\Symfony\SymfonyRequestProvider;
+    use TTools\Provider\Symfony\SymfonyStorageSession;
+    
+    (...)
+    
     public function twitterAction(Request $request)
     {
         $sp = new SymfonyStorageSession($this->get('session'));
