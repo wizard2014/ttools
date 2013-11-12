@@ -24,5 +24,6 @@ docs
 - [Getting Started](https://github.com/ttools/ttools/blob/master/doc/getting_started.md)
 - [Basic Usage - single user Application](https://github.com/ttools/ttools/blob/master/doc/basic_singleuser.md)
 - [Basic multi-user (with auth) Application](https://github.com/ttools/ttools/blob/master/doc/basic_multiuser.md)
+- [Usage on Symfony](https://github.com/ttools/ttools/blob/master/doc/example_symfony.md)
 - [Making Requests to the Twitter API](https://github.com/ttools/ttools/blob/master/doc/making_requests.md)
 
