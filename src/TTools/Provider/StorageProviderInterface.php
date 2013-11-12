@@ -2,7 +2,7 @@
 
 namespace TTools\Provider;
 
-interface StorageProvider {
+interface StorageProviderInterface {
 
     function storeRequestSecret($request_token, $request_secret);
 

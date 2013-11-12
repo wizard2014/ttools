@@ -1,11 +1,10 @@
 <?php
 
-namespace TTools\Provider;
+namespace TTools\Provider\Basic;
 
-use TTools\TTools;
-use TTools\Provider\StorageProvider;
+use TTools\Provider\StorageProviderInterface;
 
-class StorageSession implements StorageProvider {
+class StorageSession implements StorageProviderInterface {
 
     const KEY_TOKEN  = 'ttools_last_token';
     const KEY_SECRET = 'ttols_last_secret';

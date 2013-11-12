@@ -1,5 +1,7 @@
 <?php
-
+/**
+ * TTools Class
+ */
 namespace TTools;
 
 class TTools
@@ -13,7 +15,7 @@ class TTools
 	
 	private $last_req_info;
 
-	const VERSION              = '1.0.1-dev';
+	const VERSION              = '2.0-dev';
     const API_VERSION          = '1.1';
     const REQ_BASE             = 'https://api.twitter.com';
     const REQUEST_PATH         = '/oauth/request_token';
@@ -25,7 +27,7 @@ class TTools
     public function __construct(array $config)
     {
         $this->consumer_key        = $config['consumer_key'];
-        $this->consumer_secret     = $config[ 'consumer_secret'];
+        $this->consumer_secret     = $config['consumer_secret'];
         $this->access_token        = null;
         $this->access_token_secret = null;
         $this->state               = 0;
@@ -40,36 +42,57 @@ class TTools
         }
          
     }
-	
+
+    /**
+     * Returns current state
+     * @return int
+     */
     public function getState()
     {         
         return $this->state;
     }
-	
-    public function setState($state)
+
+    /**
+     * Internal - Sets current state.
+     * @param $state
+     */
+    private function setState($state)
     {
         $this->state = $state;
     }
-    
+
+    /**
+     * Sets the current user tokens
+     * @param string $at  Access Token
+     * @param string $ats Access Token Secret
+     */
     public function setUserTokens($at, $ats)
     {
         $this->access_token        = $at;
         $this->access_token_secret = $ats;
     }
 
+    /**
+     * Gets the current user tokens
+     * @return array Returns an array where the first position is the Access Token and the second position is the Access Token Secret
+     */
     public function getUserTokens()
     {
         return array($this->access_token, $this->access_token_secret);
     }
 
+    /**
+     * Gets the authorization url.
+     * @return array If successfull, returns an array with 'auth_url', 'secret' and 'token'; otherwise, returns array with error code and message.
+     */
     public function getAuthorizeUrl()
     {
     
         $result = $this->OAuthRequest(self::REQUEST_PATH);
            
-        if ($result['code'] == 200) {
+        if ($result->getCode() == 200) {
  
-            $tokens = $this->parseResponse($result['response']);
+            $tokens = $this->parseResponse($result->getResponse());
            
             return array(
                 'auth_url' => self::REQ_BASE . $this->auth_method . '?oauth_token=' . $tokens['oauth_token'],
@@ -78,20 +101,28 @@ class TTools
             );
             
          } else {
-            return $result;
+            return $this->handleError($result);
          }
 
     }
-    
+
+    /**
+     * Makes a Request to get the user access tokens
+     * @param string $request_token
+     * @param string $request_secret
+     * @param string $oauth_verifier
+     *
+     * @return array Returns an array with the user data and tokens, or an error array with code and message
+     */
     public function getAccessTokens($request_token, $request_secret, $oauth_verifier)
     {
         $this->setUserTokens($request_token, $request_secret);
         
         $result = $this->OAuthRequest(self::ACCESS_PATH, array('oauth_verifier' => $oauth_verifier), 'POST');
        
-        if ($result['code'] == 200) {
+        if ($result->getCode() == 200) {
             
-            $tokens = $this->parseResponse($result['response']);       
+            $tokens = $this->parseResponse($result->getResponse());
             $this->setUserTokens($tokens['oauth_token'], $tokens['oauth_token_secret']);                    
             $this->setState(1);
             
@@ -102,12 +133,7 @@ class TTools
                 'user_id'             => $tokens['user_id'],
             );
         } else {
-            $response = json_decode($result['response'],1);
-            return array(
-                'error' => $result['code'],
-                'error_message' => $response['errors'][0]['message']
-              
-            );
+            return $this->handleError($result);
         }
     }
     
@@ -122,55 +148,74 @@ class TTools
         }
         return $r;
     }
-    
+
+    /**
+     * @param $url
+     * @param array $params
+     * @param string $method
+     * @param null $callback
+     * @param bool $multipart
+     * @param array $overwrite_config
+     * @return array|OAuthResponse
+     */
     private function OAuthRequest($url, $params = array(), $method = 'GET', $callback = null, $multipart = false, $overwrite_config = array())
     {
-        $config = array_merge(
-            array(
-                'consumer_key'    => $this->consumer_key,
-                'consumer_secret' => $this->consumer_secret,
-                'user_token'      => $this->access_token,
-                'user_secret'     => $this->access_token_secret,
-                'user_agent'      => 'ttools ' . self::VERSION . ' - erikaheidi.github.com/ttools',
-          ), $overwrite_config);
-        
-        
-        $oauth = new \tmhOAuth\tmhOAuth($config);
-        
-        $req = $oauth->request($method, $oauth->url($url,''), $params, true, $multipart);
+        $oauth = new OAuthRequest($this->consumer_key, $this->consumer_secret, $this->access_token, $this->access_token_secret);
+        $oauth->setUserAgent('ttools ' . self::VERSION . ' - erikaheidi.github.com/ttools');
 
-        if (!$req)
+        $response = $oauth->request($method, $url, $params, $multipart);
+
+        if (!$response)
             return array('code' => "666");
 
         $this->last_req_info = array (
             'path'          => $url,
-            'response_code' => $oauth->response['code'],
+            'response_code' => $response->getCode(),
         );
         
         if ($callback !== null) {
-            call_user_func($callback, $oauth->response['code'], $oauth->response);
+            call_user_func($callback, $response->getCode(), $response->getResponse());
         }
 
-        return $oauth->response;
+        return $response;
     }
-    
+
+    /**
+     * @param $url
+     * @param array $params
+     * @param string $method
+     * @param bool $multipart
+     * @param array $overwrite_config
+     * @return array|mixed
+     */
     public function makeRequest($url, $params = array(), $method = 'GET', $multipart = false, $overwrite_config = array())
     {       
         $result = $this->OAuthRequest($url, $params, $method, null, $multipart, $overwrite_config);
-        if ($result['code'] == 200) {
+        if ($result->getCode() == 200) {
         
-        	return json_decode($result['response'],1);
+        	return json_decode($result->getResponse(), 1);
         
         } else {
-            $response = json_decode($result['response'],1);
-            return array(
-        	    'error'         => $result['code'],
-        	    'error_message' => $response['errors'][0]['message']
-              
-        	);
+            return $this->handleError($result);
         }
     }
-    
+
+    /**
+     * @param OAuthResponse $response
+     * @return array
+     */
+    public function handleError(OAuthResponse $response)
+    {
+        $response = json_decode($response->getResponse(), 1);
+        return array(
+            'error'         => $response->getCode(),
+            'error_message' => $response['errors'][0]['message']
+        );
+    }
+
+    /**
+     * @return array
+     */
     public function getLastReqInfo()
     {
         return $this->last_req_info; 
