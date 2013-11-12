@@ -193,7 +193,6 @@ class OAuthRequest {
             CURLOPT_TIMEOUT        => 10,
             CURLOPT_RETURNTRANSFER => true,
             CURLOPT_URL            => $requestUrl,
-            //CURLOPT_HEADERFUNCTION => array($this, 'curlHeader'),
             CURLOPT_SSL_VERIFYPEER => false,
             CURLOPT_HEADER         => false,
             CURLINFO_HEADER_OUT    => true,
