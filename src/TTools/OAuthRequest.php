@@ -201,7 +201,7 @@ class OAuthRequest {
 
         if ($method == 'POST') {
             curl_setopt($curl, CURLOPT_POST, true);
-            curl_setopt($curl, CURLOPT_POSTFIELDS, $params);
+            curl_setopt($curl, CURLOPT_POSTFIELDS, $multipart ? $params : $this->urlencodeRfc3986($params));
         }
 
         $response = new OAuthResponse();
