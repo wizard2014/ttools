@@ -51,7 +51,27 @@
 </pre>
 
 <h1>
-<a name="examples" class="anchor" href="#examples"><span class="octicon octicon-link"></span></a>examples</h1>
+<a name="basic-usage" class="anchor" href="#basic-usage"><span class="octicon octicon-link"></span></a>basic usage</h1>
+
+<p>The most basic usage example of TTools is for single-user Twitter apps, like Twitter bots.</p>
+
+<pre>
+$config = array(
+    'consumer_key'        =&gt; 'APP_CONSUMER_KEY',
+    'consumer_secret'     =&gt; 'APP_CONSUMER_SECRET',
+    'access_token'        =&gt; 'USER_TOKEN',
+    'access_token_secret' =&gt; 'USER_TOKEN_SECRET',
+);
+$app = new \TTools\App($config);
+echo "user info";
+print_r($app-&gt;getCurrentUser());
+
+echo "last req info";
+print_r($app-&gt;getLastReqInfo());
+</pre>
+
+<h1>
+<a name="other-examples" class="anchor" href="#other-examples"><span class="octicon octicon-link"></span></a>other examples</h1>
 
 <ul>
 <li><a href="https://github.com/ttools/ttools/blob/master/doc/basic_singleuser.rst">Basic Usage - single user Application</a></li>
