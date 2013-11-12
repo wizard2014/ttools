@@ -25,7 +25,8 @@ Run ``composer install`` or ``composer update`` to install TTools.
 2. Creating the application
 =====
 
-This example uses the basic providers that comes with TTools. It will use the default PHP session for storing the request keys and authenticate the user.::
+This example uses the basic providers that comes with TTools. It will use the default PHP session for storing the request keys and authenticate the user.
+After the user has succesfully authenticated, the app will print the user's timeline::
 
     $config = array(
         'consumer_key'    => 'APP_CONSUMER_KEY',
