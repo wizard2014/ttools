@@ -7,17 +7,35 @@ namespace TTools;
 
 class OAuthRequest {
 
+    /** @var string Application consumer key */
     protected $consumerKey;
+
+    /** @var string Application consumer secret */
     protected $consumerSecret;
+
+    /** @var string Request Token */
     protected $token;
+
+    /** @var string Request Secret */
     protected $tokenSecret;
 
+    /** @var string Curl User Agent */
     protected $userAgent;
+
+    /** @var string Request Base String */
     protected $baseUrl = "";
 
     const OAUTH_VERSION = '1.0';
     const OAUTH_SIGNATURE_METHOD = 'HMAC-SHA1';
 
+    /**
+     * Creates the OAuthRequest object
+     *
+     * @param string $consumerKey    Application Consumer Key
+     * @param string $consumerSecret Application Consumer Secret
+     * @param string $token          Request Token
+     * @param string $tokenSecret    Request Token Secret
+     */
     public function __construct($consumerKey, $consumerSecret, $token, $tokenSecret)
     {
         $this->userAgent      = 'TTools 2.0';
@@ -30,7 +48,7 @@ class OAuthRequest {
     }
 
     /**
-     * @param mixed $consumerKey
+     * @param string $consumerKey
      */
     public function setConsumerKey($consumerKey)
     {
@@ -38,7 +56,7 @@ class OAuthRequest {
     }
 
     /**
-     * @return mixed
+     * @return string
      */
     public function getConsumerKey()
     {
@@ -46,7 +64,7 @@ class OAuthRequest {
     }
 
     /**
-     * @param mixed $consumerSecret
+     * @param string $consumerSecret
      */
     public function setConsumerSecret($consumerSecret)
     {
@@ -54,7 +72,7 @@ class OAuthRequest {
     }
 
     /**
-     * @return mixed
+     * @return string
      */
     public function getConsumerSecret()
     {
@@ -62,7 +80,7 @@ class OAuthRequest {
     }
 
     /**
-     * @param mixed $token
+     * @param string $token
      */
     public function setToken($token)
     {
@@ -70,7 +88,7 @@ class OAuthRequest {
     }
 
     /**
-     * @return mixed
+     * @return string
      */
     public function getToken()
     {
@@ -78,7 +96,7 @@ class OAuthRequest {
     }
 
     /**
-     * @param mixed $tokenSecret
+     * @param string $tokenSecret
      */
     public function setTokenSecret($tokenSecret)
     {
@@ -86,7 +104,7 @@ class OAuthRequest {
     }
 
     /**
-     * @return mixed
+     * @return string
      */
     public function getTokenSecret()
     {
@@ -125,7 +143,17 @@ class OAuthRequest {
         return $this->baseUrl;
     }
 
-    public function request($method, $url, $params, $multipart = false)
+    /**
+     * Performs an authenticated OAuth Request
+     *
+     * @param string $method    Request Method (GET / POST)
+     * @param string $url       Request endpoint (e.g: /1.1/account/verify_credentials.json)
+     * @param array  $params    Params for the request
+     * @param bool   $multipart If the request is multipart or not (defaults to false)
+     *
+     * @return OAuthResponse    Returns an OAuthResponse object
+     */
+    public function request($method, $url, $params = array(), $multipart = false)
     {
         $headers = array(
             'Authorization: ' . $this->getOAuthHeader($method, $this->baseUrl . $url, $params)
@@ -141,7 +169,18 @@ class OAuthRequest {
         return $this->curlRequest($url, $params, $headers, $method, $multipart);
     }
 
-    public function curlRequest($url, $params, $headers, $method = 'GET', $multipart = false)
+    /**
+     * Performs a OAuth curl request.
+     *
+     * @param string $url
+     * @param array  $params
+     * @param array  $headers
+     * @param string $method
+     * @param bool   $multipart
+     *
+     * @return OAuthResponse
+     */
+    protected function curlRequest($url, $params = array(), $headers = array(), $method = 'GET', $multipart = false)
     {
         $requestUrl = $this->baseUrl . $url . '?' . $this->formatQueryString($params);
 
@@ -178,7 +217,16 @@ class OAuthRequest {
         return $response;
     }
 
-    public function getOAuthHeader($method, $url, $params = array(), $multipart = false)
+    /**
+     * Gets the OAuth signed Authorization headers
+     * @param string $method
+     * @param string $url
+     * @param array  $params
+     * @param bool   $multipart
+     *
+     * @return string
+     */
+    protected function getOAuthHeader($method, $url, $params = array(), $multipart = false)
     {
         $oauth['oauth_consumer_key']     = $this->consumerKey;
         $oauth['oauth_nonce']            = time();
@@ -213,6 +261,12 @@ class OAuthRequest {
         return 'OAuth ' . implode(', ', $authParams);
     }
 
+    /**
+     * Encodes parameters
+     * @param array $params
+     * @param bool $quoted
+     * @return array
+     */
     protected function encodeParams(array $params = [], $quoted = false)
     {
         $encoded = array();
@@ -229,7 +283,7 @@ class OAuthRequest {
         return $encoded;
     }
 
-    public static function urlencodeRfc3986($input)
+    protected function urlencodeRfc3986($input)
     {
         if (is_array($input)) {
             return array_map(array('TTools\OAuthRequest', 'urlencodeRfc3986'), $input);
@@ -240,7 +294,7 @@ class OAuthRequest {
         }
     }
 
-    public function formatQueryString(array $params)
+    protected function formatQueryString(array $params)
     {
         if (!$params) {
             return '';
