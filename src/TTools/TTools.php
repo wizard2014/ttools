@@ -13,9 +13,9 @@ class TTools
     private $auth_method;
     private $state;
 	
-	private $last_req_info;
+    private $last_req_info;
 
-	const VERSION              = '2.0-dev';
+    const VERSION              = '2.0-dev';
     const API_VERSION          = '1.1';
     const REQ_BASE             = 'https://api.twitter.com';
     const REQUEST_PATH         = '/oauth/request_token';
