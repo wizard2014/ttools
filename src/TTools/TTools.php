@@ -206,10 +206,10 @@ class TTools
      */
     public function handleError(OAuthResponse $response)
     {
-        $response = json_decode($response->getResponse(), 1);
+        $content = json_decode($response->getResponse(), 1);
         return array(
             'error'         => $response->getCode(),
-            'error_message' => $response['errors'][0]['message']
+            'error_message' => $content['errors'][0]['message']
         );
     }
 
