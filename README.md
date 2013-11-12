@@ -23,6 +23,7 @@ examples
 
 - [Basic Usage - single user Application](https://github.com/ttools/ttools/blob/master/doc/basic_singleuser.rst)
 - [Basic multi-user (with auth) Application](https://github.com/ttools/ttools/blob/master/doc/basic_multiuser.rst)
+- [Making Requests to the Twitter API](https://github.com/ttools/ttools/blob/master/doc/making_requests.rst)
 
 demos
 =====
