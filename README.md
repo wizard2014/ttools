@@ -18,10 +18,11 @@ Add this requirement to your composer.json file:
 </pre>
 
 
-examples
+docs
 =====
 
-- [Basic Usage - single user Application](https://github.com/ttools/ttools/blob/master/doc/basic_singleuser.rst)
-- [Basic multi-user (with auth) Application](https://github.com/ttools/ttools/blob/master/doc/basic_multiuser.rst)
-- [Making Requests to the Twitter API](https://github.com/ttools/ttools/blob/master/doc/making_requests.rst)
+- [Getting Started](https://github.com/ttools/ttools/blob/master/doc/getting_started.md)
+- [Basic Usage - single user Application](https://github.com/ttools/ttools/blob/master/doc/basic_singleuser.md)
+- [Basic multi-user (with auth) Application](https://github.com/ttools/ttools/blob/master/doc/basic_multiuser.md)
+- [Making Requests to the Twitter API](https://github.com/ttools/ttools/blob/master/doc/making_requests.md)
 
