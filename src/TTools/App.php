@@ -97,7 +97,7 @@ class App {
     public function getCredentials()
     {
         return $this->get('/account/verify_credentials.json',
-            array('include_entities' => false, 'skip_status' => true)
+            array('include_entities' => 'false', 'skip_status' => 'true')
         );
     }
 
