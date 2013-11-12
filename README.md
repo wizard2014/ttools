@@ -25,8 +25,3 @@ examples
 - [Basic multi-user (with auth) Application](https://github.com/ttools/ttools/blob/master/doc/basic_multiuser.rst)
 - [Making Requests to the Twitter API](https://github.com/ttools/ttools/blob/master/doc/making_requests.rst)
 
-demos
-=====
-
-
-<a href="https://github.com/erikaheidi/ttools-demos">https://github.com/erikaheidi/ttools-demos</a>
