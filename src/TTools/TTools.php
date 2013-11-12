@@ -166,7 +166,7 @@ class TTools
         $response = $oauth->request($method, $url, $params, $multipart);
 
         if (!$response)
-            return array('code' => "666");
+            return array('error' => "666");
 
         $this->last_req_info = array (
             'path'          => $url,
@@ -206,10 +206,12 @@ class TTools
      */
     public function handleError(OAuthResponse $response)
     {
-        $content = json_decode($response->getResponse(), 1);
+
         return array(
             'error'         => $response->getCode(),
-            'error_message' => $content['errors'][0]['message']
+            'error_message' => $response->getError(),
+            'raw_response'  => $response->getResponse()
+
         );
     }
 
