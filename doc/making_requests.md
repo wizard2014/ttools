@@ -52,7 +52,7 @@ using the helper method update():
 
 manually posting an update:
 
-  $app->post('/statuses/update.json', array('status' => 'This is my awesome tweet update');
+    $app->post('/statuses/update.json', array('status' => 'This is my awesome tweet update');
 
 Posting an Image
 ====
