@@ -128,7 +128,7 @@ class TTools
         $oauth = new OAuthRequest($this->consumer_key, $this->consumer_secret, $this->access_token, $this->access_token_secret);
         $oauth->setUserAgent('ttools ' . self::VERSION . ' - erikaheidi.github.com/ttools');
 
-        $response = $oauth->request($method, $url, $params);
+        $response = $oauth->request($method, $url, $params, $multipart);
 
         if (!$response)
             return array('code' => "666");

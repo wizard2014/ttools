@@ -125,17 +125,23 @@ class OAuthRequest {
         return $this->baseUrl;
     }
 
-    public function request($method, $url, $params)
+    public function request($method, $url, $params, $multipart = false)
     {
         $headers = array(
-            'Authorization: ' . $this->getOAuthHeader($method, $this->baseUrl . $url, $params),
-            'Content-type: ' . 'application/x-www-form-urlencoded',
+            'Authorization: ' . $this->getOAuthHeader($method, $this->baseUrl . $url, $params)
         );
 
-        return $this->curlRequest($url, $params, $headers, $method);
+        if (!$multipart) {
+            $headers[] = 'Content-type: application/x-www-form-urlencoded';
+        } else {
+            $headers[] = 'Content-type: multipart/form-data';
+            $headers[] = 'Expect: ';
+        }
+
+        return $this->curlRequest($url, $params, $headers, $method, $multipart);
     }
 
-    public function curlRequest($url, $params, $headers, $method = 'GET')
+    public function curlRequest($url, $params, $headers, $method = 'GET', $multipart = false)
     {
         $requestUrl = $this->baseUrl . $url . '?' . $this->formatQueryString($params);
 
@@ -172,7 +178,7 @@ class OAuthRequest {
         return $response;
     }
 
-    public function getOAuthHeader($method, $url, $params = array())
+    public function getOAuthHeader($method, $url, $params = array(), $multipart = false)
     {
         $oauth['oauth_consumer_key']     = $this->consumerKey;
         $oauth['oauth_nonce']            = time();
@@ -181,7 +187,13 @@ class OAuthRequest {
         $oauth['oauth_token']            = $this->token;
         $oauth['oauth_version']          = self::OAUTH_VERSION;
 
-        $signParams = array_merge($params, $oauth);
+        if (!$multipart) {
+            $signParams = array_merge($params, $oauth);
+        }
+        else {
+            $signParams = $oauth;
+        }
+
         uksort($signParams, 'strcmp');
 
         $query = $this->encodeParams($signParams);
