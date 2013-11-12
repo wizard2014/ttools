@@ -211,6 +211,7 @@ class TTools
             'error'         => $response->getCode(),
             'error_message' => $response->getError(),
             'raw_response'  => $response->getResponse()
+
         );
     }
 
