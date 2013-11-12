@@ -18,7 +18,7 @@ Add this requirement to your composer.json file:
 </pre>
 
 
-examples
+docs
 =====
 
 - [Getting Started](https://github.com/ttools/ttools/blob/master/doc/getting_started.md)
