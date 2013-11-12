@@ -71,11 +71,39 @@ print_r($app-&gt;getLastReqInfo());
 </pre>
 
 <h1>
-<a name="other-examples" class="anchor" href="#other-examples"><span class="octicon octicon-link"></span></a>other examples</h1>
+<a name="making-some-requests" class="anchor" href="#making-some-requests"><span class="octicon octicon-link"></span></a>making some requests</h1>
+
+<p>TTools come with some helper methods to make it easy to get data from the Twitter API. Some snippets bellow:</p>
+
+<p><strong>getting user timeline</strong></p>
+
+<pre>
+$timeline = $app-&gt;getTimeline();
+print_r($timeline);
+</pre>
+
+<p><strong>getting user mentions</strong></p>
+
+<pre>
+$mentions = $app-&gt;getMentions();
+print_r($mentions);
+</pre>
+
+<p><strong>updating with photo</strong></p>
+
+<pre>
+$app-&gt;updateWithMedia('path_to_my_awesome_image', 'This is my awesome image');
+</pre>
+
+<p>Pretty easy, huh?</p>
+
+<h1>
+<a name="some-docs" class="anchor" href="#some-docs"><span class="octicon octicon-link"></span></a>some docs</h1>
 
 <ul>
 <li><a href="https://github.com/ttools/ttools/blob/master/doc/basic_singleuser.rst">Basic Usage - single user Application</a></li>
 <li><a href="https://github.com/ttools/ttools/blob/master/doc/basic_multiuser.rst">Basic multi-user (with auth) Application</a></li>
+<li><a href="https://github.com/ttools/ttools/blob/master/doc/making_requests.rst">Making requests to the Twitter API</a></li>
 </ul><h1>
 <a name="demos" class="anchor" href="#demos"><span class="octicon octicon-link"></span></a>demos</h1>
 
