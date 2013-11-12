@@ -3,8 +3,7 @@ Making Requests to the Twitter API
 
 TTools has a couple helper methods to get you started, but you can make any request you want to the Twitter API.
 
-For the examples below, we are going to consider that you already have an APP configured with authorization tokens.
-Head to the [Basic singleuser](https://github.com/ttools/ttools/blob/master/doc/basic_singleuser.rst) or [Basic multiuser](https://github.com/ttools/ttools/blob/master/doc/basic_multiuser.rst) examples to get started.
+For the examples below, we are going to consider that you already have an APP configured with authorization tokens (head to the basic example usages to get started).
 
 Request responses come as **arrays** representing the Twitter API objects (json decoded).
 
