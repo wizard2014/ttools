@@ -6,7 +6,6 @@ use TTools\Provider\StorageProvider;
 
 class LaravelStorageSession implements StorageProvider
 {
-
     private $session;
 
     const KEY_TOKEN  = 'ttools_last_token';

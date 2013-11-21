@@ -31,7 +31,7 @@ class TToolsServiceProvider extends ServiceProvider
                 'access_token_secret' => isset($app['config']['ttools.access_token_secret']) ? $app['config']['ttools.access_token_secret'] : null,
                 'auth_method'         => isset($app['config']['ttools.auth_method']) ? $app['config']['ttools.auth_method'] : null,
             );
-            
+
             if (isset($app['session'])) {
                 $storage_provider = new LaravelStorageSession($app['session']);
             }

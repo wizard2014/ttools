@@ -6,7 +6,6 @@ use TTools\Provider\RequestProvider;
 
 class LaravelRequestProvider extends RequestProvider
 {
-
     private $request;
 
     public function __construct($request)
@@ -17,6 +16,5 @@ class LaravelRequestProvider extends RequestProvider
     public function get($var)
     {
         return $this->request->get($var);
-    } 
-
+    }
 }
