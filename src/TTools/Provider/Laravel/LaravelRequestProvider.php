@@ -2,9 +2,9 @@
 
 namespace TTools\Provider\Laravel;
 
-use TTools\Provider\RequestProvider;
+use TTools\Provider\RequestProviderInterface;
 
-class LaravelRequestProvider extends RequestProvider
+class LaravelRequestProvider implements RequestProviderInterface
 {
     private $request;
 

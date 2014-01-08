@@ -2,9 +2,9 @@
 
 namespace TTools\Provider\Laravel;
 
-use TTools\Provider\StorageProvider;
+use TTools\Provider\StorageProviderInterface;
 
-class LaravelStorageSession implements StorageProvider
+class LaravelStorageSession implements StorageProviderInterface
 {
     private $session;
 

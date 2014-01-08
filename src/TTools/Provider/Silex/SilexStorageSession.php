@@ -2,10 +2,10 @@
 
 namespace TTools\Provider\Silex;
 
-use TTools\Provider\StorageProvider;
+use TTools\Provider\StorageProviderInterface;
 
-class SilexStorageSession implements StorageProvider {
-
+class SilexStorageSession implements StorageProviderInterface
+{
     private $session;
 
     const KEY_TOKEN  = 'ttools_last_token';

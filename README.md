@@ -11,7 +11,7 @@ Add this requirement to your composer.json file:
 <pre>
 {
     "require": {
-            "ttools/ttools": "dev-master"
+            "ttools/ttools": "2.0.*@dev"
     }
 }
 

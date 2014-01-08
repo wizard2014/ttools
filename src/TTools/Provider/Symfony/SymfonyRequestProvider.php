@@ -2,10 +2,10 @@
 
 namespace TTools\Provider\Symfony;
 
-use TTools\Provider\RequestProvider;
+use TTools\Provider\RequestProviderInterface;
 
-class SymfonyRequestProvider extends RequestProvider{
-
+class SymfonyRequestProvider implements RequestProviderInterface
+{
     private $request;
 
     public function __construct($request)
