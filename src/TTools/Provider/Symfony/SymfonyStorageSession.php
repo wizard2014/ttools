@@ -2,10 +2,10 @@
 
 namespace TTools\Provider\Symfony;
 
-use TTools\Provider\StorageProvider;
+use TTools\Provider\StorageProviderInterface;
 
-class SymfonyStorageSession implements StorageProvider {
-
+class SymfonyStorageSession implements StorageProviderInterface
+{
     private $session;
 
     const KEY_TOKEN  = 'ttools_last_token';

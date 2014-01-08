@@ -2,9 +2,10 @@
 
 namespace TTools\Provider\Silex;
 
-use TTools\Provider\RequestProvider;
+use TTools\Provider\RequestProviderInterface;
 
-class SilexRequestProvider extends RequestProvider{
+class SilexRequestProvider implements RequestProviderInterface
+{
 
     private $request;
 
