@@ -11,7 +11,7 @@ use TTools\Provider\Symfony\SymfonyRequestProvider;
 use TTools\Provider\Symfony\SymfonyStorageSession;
 use TTools\App;
 
-class TToolsService {
+class TToolsServiceProvider {
 
     private $ttools;
 
