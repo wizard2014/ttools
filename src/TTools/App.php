@@ -88,25 +88,32 @@ class App {
      */
     public function getUser()
     {
-        $user = array();
-        if ($this->ttools->getState()) {
-            $user = $this->getCredentials();
-        } else {
+        if (! $this->ttools->getState()) {
             $oauth_verifier = $this->request->get('oauth_verifier');
             if ($oauth_verifier !== null) {
 
                 $secret = $this->storage->getRequestSecret();
                 $oauth_token = $this->request->get('oauth_token');
-                $tokens = $this->ttools->getAccessTokens($oauth_token, $secret, $oauth_verifier);
+                $credentials = $this->ttools->getAccessTokens($oauth_token, $secret, $oauth_verifier);
 
-                if (!empty($tokens['access_token'])) {
-                    $this->storage->storeLoggedUser($tokens);
-                    $user = $this->getCredentials();
+                if (!empty($credentials['access_token'])) {
+                    $this->storage->storeLoggedUser($credentials);
                 }
             }
         }
 
-        return $user;
+        return $this->getLoggedUser();
+    }
+
+    public function getLoggedUser()
+    {
+        $user = $this->storage->getLoggedUser();
+
+        if (is_array($user)) {
+            return [ 'user_id' => $user['user_id'], 'screen_name' => $user['screen_name'] ];
+        }
+
+        return null;
     }
 
     /**
