@@ -110,7 +110,7 @@ class App {
         $user = $this->storage->getLoggedUser();
 
         if (is_array($user)) {
-            return [ 'user_id' => $user['user_id'], 'screen_name' => $user['screen_name'] ];
+            return array( 'user_id' => $user['user_id'], 'screen_name' => $user['screen_name'] );
         }
 
         return null;
@@ -150,6 +150,29 @@ class App {
     }
 
     /**
+     * Gets a user profile. If you want to get another user's profile, you just need to provide an array with either
+     * the 'user_id' or the 'screen_name' .
+     *
+     * Example:
+     * <code>
+     * $profile = $ttools->getProfile(array('screen_name' => 'erikaheidi));
+     * </code>
+     *
+     * @param array $params The twitter user ID or screen_name(optional)
+     * @return array|mixed
+     *
+     */
+    public function getProfile(array $params = null)
+    {
+        if (count($params)) {
+            return $this->get('/users/show.json', $params);
+        }
+
+        return $this->getCredentials();
+    }
+
+    /**
+     * Get logged user profile
      * @return array|mixed
      */
     public function getCredentials()
