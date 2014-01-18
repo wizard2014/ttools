@@ -6,6 +6,7 @@
 namespace TTools\Provider\Symfony;
 
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\HttpFoundation\Session\SessionInterface;
 use TTools\Provider\Symfony\SymfonyRequestProvider;
 use TTools\Provider\Symfony\SymfonyStorageSession;
@@ -18,13 +19,15 @@ class TToolsServiceProvider {
     /**
      * @param array $config
      * @param SessionInterface $session
-     * @param Request $request
+     * @param RequestStack $requestStack
      *
      */
-    public function __construct(array $config = [], SessionInterface $session, Request $request)
+    public function __construct(array $config = [], SessionInterface $session, RequestStack $requestStack)
     {
         $sp = new SymfonyStorageSession($session);
-        $rp = new SymfonyRequestProvider($request);
+        $request = $requestStack->getCurrentRequest();
+
+        $rp = $request ? new SymfonyRequestProvider($request) : null;
 
         $this->ttools = new App($config, $sp, $rp);
     }
@@ -37,4 +40,13 @@ class TToolsServiceProvider {
         return $this->ttools;
     }
 
+    public function isLogged()
+    {
+        return $this->ttools->isLogged();
+    }
+
+    public function getUser()
+    {
+        return $this->ttools->getCurrentUser();
+    }
 } 

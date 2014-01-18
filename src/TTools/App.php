@@ -24,6 +24,9 @@ class App {
     /** @var array */
     private $current_user;
 
+    /** @var bool Get complete user credentials by default */
+    private $strip_credentials;
+
     /**
      * @param array $config
      * @param StorageProviderInterface $sp
@@ -43,6 +46,7 @@ class App {
             }
         }
 
+        $this->strip_credentials = isset($config['strip_credentials']) ? $config['strip_credentials'] : false;
         $this->ttools = new TTools($config);
 
         $this->current_user = $this->getUser();
@@ -53,7 +57,7 @@ class App {
      */
     public function isLogged()
     {
-        return count($this->current_user);
+        return $this->current_user !== null;
     }
 
     /**
@@ -88,25 +92,35 @@ class App {
      */
     public function getUser()
     {
-        $user = array();
-        if ($this->ttools->getState()) {
-            $user = $this->getCredentials();
-        } else {
+        if (! $this->ttools->getState()) {
             $oauth_verifier = $this->request->get('oauth_verifier');
             if ($oauth_verifier !== null) {
 
                 $secret = $this->storage->getRequestSecret();
                 $oauth_token = $this->request->get('oauth_token');
-                $tokens = $this->ttools->getAccessTokens($oauth_token, $secret, $oauth_verifier);
+                $credentials = $this->ttools->getAccessTokens($oauth_token, $secret, $oauth_verifier);
 
-                if (!empty($tokens['access_token'])) {
-                    $this->storage->storeLoggedUser($tokens);
-                    $user = $this->getCredentials();
+                if (!empty($credentials['access_token'])) {
+                    if (!$this->strip_credentials) {
+                        $credentials = array_merge($credentials, $this->getCredentials());
+                    }
+                    $this->storage->storeLoggedUser($credentials);
                 }
             }
         }
 
-        return $user;
+        return $this->getLoggedUser();
+    }
+
+    public function getLoggedUser()
+    {
+        $credentials = $this->storage->getLoggedUser();
+
+        if (is_array($credentials)) {
+            return new User($credentials);
+        }
+
+        return null;
     }
 
     /**
@@ -143,6 +157,29 @@ class App {
     }
 
     /**
+     * Gets a user profile. If you want to get another user's profile, you just need to provide an array with either
+     * the 'user_id' or the 'screen_name' .
+     *
+     * Example:
+     * <code>
+     * $profile = $ttools->getProfile(array('screen_name' => 'erikaheidi));
+     * </code>
+     *
+     * @param array $params The twitter user ID or screen_name(optional)
+     * @return array|mixed
+     *
+     */
+    public function getProfile(array $params = null)
+    {
+        if (count($params)) {
+            return $this->get('/users/show.json', $params);
+        }
+
+        return $this->getCredentials();
+    }
+
+    /**
+     * Get logged user profile
      * @return array|mixed
      */
     public function getCredentials()
