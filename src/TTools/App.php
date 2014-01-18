@@ -104,6 +104,7 @@ class App {
                     if (!$this->strip_credentials) {
                         $credentials = array_merge($credentials, $this->getCredentials());
                     }
+
                     $this->storage->storeLoggedUser($credentials);
                 }
             }
