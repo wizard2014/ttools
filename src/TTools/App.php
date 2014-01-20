@@ -61,7 +61,7 @@ class App {
     }
 
     /**
-     * @return mixed
+     * @return string
      */
     public function getLoginUrl()
     {
@@ -72,7 +72,8 @@ class App {
     }
 
     /**
-     * @return array|mixed
+     * Gets the current logged user, if any.
+     * @return User
      */
     public function getCurrentUser()
     {
@@ -80,6 +81,7 @@ class App {
     }
 
     /**
+     * Gets information about the last request.
      * @return array
      */
     public function getLastReqInfo()
@@ -88,7 +90,11 @@ class App {
     }
 
     /**
-     * @return array|mixed
+     * Retrieves the Twitter User. If there's no logged user yet, it will
+     * check if the user is coming back from the Twitter Auth page and
+     * retrieve its tokens.
+     *
+     * @return User Returns a TTools User object or null if there's no logged user.
      */
     public function getUser()
     {
@@ -113,6 +119,10 @@ class App {
         return $this->getLoggedUser();
     }
 
+    /**
+     * Returns a User object with ArrayAccess. Returns null if theres no logged user.
+     * @return User
+     */
     public function getLoggedUser()
     {
         $credentials = $this->storage->getLoggedUser();
@@ -137,7 +147,7 @@ class App {
      * @param $path
      * @param array $params
      * @param array $config
-     * @return array|mixed
+     * @return array
      */
     public function get($path, $params = array(), $config = array())
     {
@@ -150,7 +160,7 @@ class App {
      * @param $params
      * @param bool $multipart
      * @param array $config
-     * @return array|mixed
+     * @return array
      */
     public function post($path, $params, $multipart = false, $config = array())
     {
@@ -167,7 +177,7 @@ class App {
      * </code>
      *
      * @param array $params The twitter user ID or screen_name(optional)
-     * @return array|mixed
+     * @return array
      *
      */
     public function getProfile(array $params = null)
@@ -181,7 +191,7 @@ class App {
 
     /**
      * Get logged user profile
-     * @return array|mixed
+     * @return array
      */
     public function getCredentials()
     {
@@ -191,7 +201,8 @@ class App {
     }
 
     /**
-     * @return array|mixed
+     * Returns information about the API usage and how many calls you have left.
+     * @return array
      */
     public function getRemainingCalls()
     {
@@ -199,8 +210,9 @@ class App {
     }
 
     /**
+     * Gets the home timeline for current authenticated user
      * @param int $limit
-     * @return array|mixed
+     * @return array
      */
     public function getTimeline($limit = 10)
     {
@@ -212,7 +224,7 @@ class App {
      * @param null $user_id      If specified, will try to get this user id tweets
      * @param null $screen_name  If specified, will try to get this user screen_name tweets
      * @param int $limit
-     * @return array|mixed
+     * @return array
      */
     public function getUserTimeline($user_id = null, $screen_name = null, $limit = 10)
     {
@@ -227,9 +239,9 @@ class App {
     }
 
     /**
-     * Gets current user mentions
+     * Gets mentions for the current user
      * @param int $limit
-     * @return array|mixed
+     * @return array
      */
     public function getMentions($limit = 10)
     {
@@ -239,7 +251,7 @@ class App {
     /**
      * Gets current user favorites
      * @param int $limit
-     * @return array|mixed
+     * @return array
      */
     public function getFavorites($limit = 10)
     {
@@ -249,7 +261,7 @@ class App {
     /**
      * Gets a specific Tweet
      * @param string $tweet_id The tweet id
-     * @return array|mixed
+     * @return array
      */
     public function getTweet($tweet_id)
     {
@@ -258,9 +270,11 @@ class App {
 
     /**
      * Post a tweet
-     * @param string $message   The tweet message
-     * @param null $in_reply_to A tweet id that this post is replying to (default null)
-     * @return array|mixed
+     * @param string $message      The tweet message
+     * @param string $in_reply_to [optional] A tweet id that this post is replying to. Twitter ignores this param
+     * if you don't mention the user in the tweet message.
+     *
+     * @return array
      */
     public function update($message, $in_reply_to = null)
     {
@@ -276,8 +290,10 @@ class App {
      * Post a tweet with an image embedded
      * @param string $image     Path to the image file
      * @param string $message   Message to be posted with the image
-     * @param null $in_reply_to A tweet id that this post is replying to (default null)
-     * @return array|mixed
+     * @param string $in_reply_to [optional] A tweet id that this post is replying to. Twitter ignores this param
+     * if you don't mention the user in the tweet message.
+     *
+     * @return array
      */
     public function updateWithMedia($image, $message, $in_reply_to = null)
     {
@@ -286,6 +302,7 @@ class App {
 
         return $this->post('/statuses/update_with_media.json', array(
             'status'  => $message,
+            'in_reply_to_status_id' => $in_reply_to,
             'media[]' => '@' . $image . ';type=' . $meta['mime']
         ), true);
     }
