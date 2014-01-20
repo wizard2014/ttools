@@ -1,3 +1,5 @@
+[![Latest Stable Version](https://poser.pugx.org/ttools/ttools/v/stable.png)](https://packagist.org/packages/ttools/ttools) [![Total Downloads](https://poser.pugx.org/ttools/ttools/downloads.png)](https://packagist.org/packages/ttools/ttools) [![Latest Unstable Version](https://poser.pugx.org/ttools/ttools/v/unstable.png)](https://packagist.org/packages/ttools/ttools) [![License](https://poser.pugx.org/ttools/ttools/license.png)](https://packagist.org/packages/ttools/ttools)
+
 ttools 2.0
 ======
 
