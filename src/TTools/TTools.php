@@ -12,7 +12,7 @@ class TTools
     private $access_token_secret;
     private $auth_method;
     private $state;
-	
+
     private $last_req_info;
 
     const VERSION              = '2.0-dev';
@@ -23,7 +23,7 @@ class TTools
 
     const AUTH_METHOD_AUTHORIZE        = '/oauth/authorize';
     const AUTH_METHOD_AUTHENTICATE     = '/oauth/authenticate';
-    
+
     public function __construct(array $config)
     {
         $this->consumer_key        = $config['consumer_key'];
@@ -40,7 +40,7 @@ class TTools
             $this->access_token_secret = $config['access_token_secret'];
             $this->state               = 2;
         }
-         
+
     }
 
     /**
@@ -48,7 +48,7 @@ class TTools
      * @return int
      */
     public function getState()
-    {         
+    {
         return $this->state;
     }
 
@@ -83,23 +83,24 @@ class TTools
 
     /**
      * Gets the authorization url.
+     *
+     * @param array $params Custom parameters passed to the OAuth request
      * @return array If successfull, returns an array with 'auth_url', 'secret' and 'token'; otherwise, returns array with error code and message.
      */
-    public function getAuthorizeUrl()
+    public function getAuthorizeUrl(array $params = array())
     {
-    
-        $result = $this->OAuthRequest(self::REQUEST_PATH);
-           
+        $result = $this->OAuthRequest(self::REQUEST_PATH, $params);
+
         if ($result->getCode() == 200) {
- 
+
             $tokens = $this->parseResponse($result->getResponse());
-           
+
             return array(
                 'auth_url' => self::REQ_BASE . $this->auth_method . '?oauth_token=' . $tokens['oauth_token'],
                 'secret'   => $tokens['oauth_token_secret'],
                 'token'    => $tokens['oauth_token']
             );
-            
+
          } else {
             return $this->handleError($result);
          }
@@ -117,15 +118,15 @@ class TTools
     public function getAccessTokens($request_token, $request_secret, $oauth_verifier)
     {
         $this->setUserTokens($request_token, $request_secret);
-        
+
         $result = $this->OAuthRequest(self::ACCESS_PATH, array('oauth_verifier' => $oauth_verifier), 'POST');
-       
+
         if ($result->getCode() == 200) {
-            
+
             $tokens = $this->parseResponse($result->getResponse());
-            $this->setUserTokens($tokens['oauth_token'], $tokens['oauth_token_secret']);                    
+            $this->setUserTokens($tokens['oauth_token'], $tokens['oauth_token_secret']);
             $this->setState(1);
-            
+
             return array(
                 'access_token'        => $this->access_token,
                 'access_token_secret' => $this->access_token_secret,
@@ -136,13 +137,13 @@ class TTools
             return $this->handleError($result);
         }
     }
-    
+
     private function parseResponse($string)
     {
         $r = array();
         foreach (explode('&', $string) as $param) {
             $pair = explode('=', $param, 2);
-            if (count($pair) != 2) 
+            if (count($pair) != 2)
                 continue;
             $r[urldecode($pair[0])] = urldecode($pair[1]);
         }
@@ -172,7 +173,7 @@ class TTools
             'path'          => $url,
             'response_code' => $response->getCode(),
         );
-        
+
         if ($callback !== null) {
             call_user_func($callback, $response->getCode(), $response->getResponse());
         }
@@ -189,12 +190,12 @@ class TTools
      * @return array|mixed
      */
     public function makeRequest($url, $params = array(), $method = 'GET', $multipart = false, $overwrite_config = array())
-    {       
+    {
         $result = $this->OAuthRequest($url, $params, $method, null, $multipart, $overwrite_config);
         if ($result->getCode() == 200) {
-        
+
         	return json_decode($result->getResponse(), 1);
-        
+
         } else {
             return $this->handleError($result);
         }
@@ -220,7 +221,7 @@ class TTools
      */
     public function getLastReqInfo()
     {
-        return $this->last_req_info; 
+        return $this->last_req_info;
     }
 
 }
