@@ -4,7 +4,6 @@
  */
 namespace TTools;
 
-use TTools\TTools;
 use TTools\Provider\StorageProviderInterface;
 use TTools\Provider\RequestProviderInterface;
 use TTools\Provider\Basic\StorageSession;
@@ -250,6 +249,16 @@ class App {
             'status'  => $message,
             'media[]' => '@' . $image . ';type=' . $meta['mime']
         ), true);
+    }
+
+    /**
+     * Destroy a tweet
+     * @param string $tweet_id The ID of the tweet
+     * @return array|mixed
+     */
+    public function destroy($tweet_id)
+    {
+        return $this->post(sprintf('/statuses/destroy/%s.json', $tweet_id), array());
     }
 
     /**
