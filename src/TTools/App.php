@@ -219,6 +219,24 @@ class App {
     }
 
     /**
+     * Renders links, hash tags, and account mentions of a Tweet message as clickable links
+     * @param string $message The tweet message
+     * @return string
+     */
+    public function linkify($message)
+    {
+        // Renders links clickable
+        $message = preg_replace('/(https?:\/\/.+?)(\s)/', '<a href="$1">$1</a>$2', $message);
+        // Renders hash tags clickable
+        $message = preg_replace('/#(.+?)(\s)/', '<a href="https://twitter.com/hashtag/$1">#$1</a>$2', $message);
+        // Renders account mentions clickable
+        $message = preg_replace('/@([\w]{1,15})(\s)/', '<a href="https://twitter.com/$1">@$1</a>$2', $message);
+
+        return $message;
+    }
+
+
+    /**
      * Post a tweet
      * @param string $message   The tweet message
      * @param null $in_reply_to A tweet id that this post is replying to (default null)
