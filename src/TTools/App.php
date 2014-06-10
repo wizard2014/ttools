@@ -61,13 +61,21 @@ class App {
     }
 
     /**
+     * @param string $callbackUrl Absolute URL which Twitter redirects to after the user
+     *                            successfully connected with the app
      * @return string
      */
-    public function getLoginUrl()
+    public function getLoginUrl($callbackUrl = null)
     {
-        $result = $this->ttools->getAuthorizeUrl();
+        $authorizeParams = array();
+
+        if ($callbackUrl !== null) {
+            $authorizeParams['oauth_callback'] = $callbackUrl;
+        }
+
+        $result = $this->ttools->getAuthorizeUrl($authorizeParams);
         $this->storage->storeRequestSecret($result['token'], $result['secret']);
-       
+
         return $result['auth_url'];
     }
 
