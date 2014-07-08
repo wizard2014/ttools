@@ -17,7 +17,7 @@ You can obtain this keys after registering your application on Twitter: https://
 
 Add ttools to your composer.json file:
 
-``"ttools/ttools": "dev-master"``
+``"ttools/ttools": "2.1.*"``
 
 
 
@@ -38,8 +38,8 @@ Bellow is an example::
 
     $app = new \TTools\App($config);
 
-    echo "user debug:<br/><pre>";
-    print_r($app->getCurrentUser());
+    echo "static user credentials:<br/><pre>";
+    print_r($app->getCredentials());
 
     echo "</pre><br>last req info:<br>";
     print_r($app->getLastReqInfo());

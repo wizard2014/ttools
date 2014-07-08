@@ -12,7 +12,7 @@ Installation can be easily made through composer. Add [ttools/ttools](https://pa
 
     {
         "require": {
-            "ttools/ttools": "dev-master"
+            "ttools/ttools": "2.1.0"
         }
     }
 

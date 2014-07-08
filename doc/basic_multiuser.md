@@ -16,7 +16,7 @@ You can obtain this keys after registering your application on Twitter: https://
 
 Add ttools to your composer.json file:
 
-``"ttools/ttools": "dev-master"``
+``"ttools/ttools": "2.1.*"``
 
 
 
