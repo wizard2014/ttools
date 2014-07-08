@@ -11,7 +11,6 @@ class TTools
     private $access_token;
     private $access_token_secret;
     private $auth_method;
-    private $state;
 
     private $last_req_info;
 
@@ -30,7 +29,6 @@ class TTools
         $this->consumer_secret     = $config['consumer_secret'];
         $this->access_token        = null;
         $this->access_token_secret = null;
-        $this->state               = 0;
         $this->last_req_info       = array();
 
         $this->auth_method = isset($config['auth_method']) ? $config['auth_method'] : self::AUTH_METHOD_AUTHORIZE;
@@ -38,27 +36,8 @@ class TTools
         if (isset($config['access_token']) && isset($config['access_token_secret'])) {
             $this->access_token        = $config['access_token'];
             $this->access_token_secret = $config['access_token_secret'];
-            $this->state               = 2;
         }
 
-    }
-
-    /**
-     * Returns current state
-     * @return int
-     */
-    public function getState()
-    {
-        return $this->state;
-    }
-
-    /**
-     * Internal - Sets current state.
-     * @param $state
-     */
-    private function setState($state)
-    {
-        $this->state = $state;
     }
 
     /**
@@ -125,7 +104,6 @@ class TTools
 
             $tokens = $this->parseResponse($result->getResponse());
             $this->setUserTokens($tokens['oauth_token'], $tokens['oauth_token_secret']);
-            $this->setState(1);
 
             return array(
                 'access_token'        => $this->access_token,

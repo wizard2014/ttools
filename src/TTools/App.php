@@ -26,6 +26,22 @@ class App {
     /** @var bool Get complete user credentials by default */
     private $strip_credentials;
 
+    /** @var  bool Controls the state of user authentication */
+    private $state;
+
+
+    /** user is not logged */
+    const STATE_NOT_LOGGED    = 0;
+
+    /** user came back from twitter authorization screen */
+    const STATE_AUTHORIZED    = 1;
+
+    /** user is logged in, credentials and tokens were retrieved */
+    const STATE_LOGGED        = 2;
+
+    /** we have static tokens from the user, but we don't have its credentials yet */
+    const STATE_LOGGED_STATIC = 3;
+
     /**
      * @param array $config
      * @param StorageProviderInterface $sp
@@ -35,11 +51,16 @@ class App {
     {
         $this->storage = $sp ?: new StorageSession();
         $this->request = $rp ?: new RequestProvider();
+        $this->setState(App::STATE_NOT_LOGGED);
 
-        if (!isset($config['access_token'])) {
+        if (isset($config['access_token']) && isset($config['access_token_secret'])) {
+            $this->setState(App::STATE_LOGGED_STATIC);
+        } else {
             /* check if theres a logged user in session */
             $user = $this->storage->getLoggedUser();
             if (!empty($user['access_token'])) {
+                $this->setState(App::STATE_LOGGED);
+
                 $config['access_token']        = $user['access_token'];
                 $config['access_token_secret'] = $user['access_token_secret'];
             }
@@ -49,6 +70,24 @@ class App {
         $this->ttools = new TTools($config);
 
         $this->current_user = $this->getUser();
+    }
+
+    /**
+     * Returns current state
+     * @return int
+     */
+    public function getState()
+    {
+        return $this->state;
+    }
+
+    /**
+     * Internal - Sets current state.
+     * @param $state
+     */
+    private function setState($state)
+    {
+        $this->state = $state;
     }
 
     /**
@@ -105,9 +144,10 @@ class App {
      */
     public function getUser()
     {
-        if (! $this->ttools->getState()) {
+        if (! $this->getState()) {
             $oauth_verifier = $this->request->get('oauth_verifier');
             if ($oauth_verifier !== null) {
+                $this->setState(App::STATE_AUTHORIZED);
 
                 $secret = $this->storage->getRequestSecret();
                 $oauth_token = $this->request->get('oauth_token');
@@ -119,6 +159,7 @@ class App {
                     }
 
                     $this->storage->storeLoggedUser($credentials);
+                    $this->setState(App::STATE_LOGGED);
                 }
             }
         }
@@ -134,11 +175,7 @@ class App {
     {
         $credentials = $this->storage->getLoggedUser();
 
-        if (is_array($credentials)) {
-            return new User($credentials);
-        }
-
-        return null;
+        return is_array($credentials) ? new User($credentials) : null;
     }
 
     /**
