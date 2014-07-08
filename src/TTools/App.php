@@ -23,6 +23,25 @@ class App {
     /** @var array */
     private $current_user;
 
+    /** @var bool Get complete user credentials by default */
+    private $strip_credentials;
+
+    /** @var  bool Controls the state of user authentication */
+    private $state;
+
+
+    /** user is not logged */
+    const STATE_NOT_LOGGED    = 0;
+
+    /** user came back from twitter authorization screen */
+    const STATE_AUTHORIZED    = 1;
+
+    /** user is logged in, credentials and tokens were retrieved */
+    const STATE_LOGGED        = 2;
+
+    /** we have static tokens from the user, but we don't have its credentials yet */
+    const STATE_LOGGED_STATIC = 3;
+
     /**
      * @param array $config
      * @param StorageProviderInterface $sp
@@ -32,19 +51,43 @@ class App {
     {
         $this->storage = $sp ?: new StorageSession();
         $this->request = $rp ?: new RequestProvider();
+        $this->setState(App::STATE_NOT_LOGGED);
 
-        if (!isset($config['access_token'])) {
+        if (isset($config['access_token']) && isset($config['access_token_secret'])) {
+            $this->setState(App::STATE_LOGGED_STATIC);
+        } else {
             /* check if theres a logged user in session */
             $user = $this->storage->getLoggedUser();
             if (!empty($user['access_token'])) {
+                $this->setState(App::STATE_LOGGED);
+
                 $config['access_token']        = $user['access_token'];
                 $config['access_token_secret'] = $user['access_token_secret'];
             }
         }
 
+        $this->strip_credentials = isset($config['strip_credentials']) ? $config['strip_credentials'] : false;
         $this->ttools = new TTools($config);
 
         $this->current_user = $this->getUser();
+    }
+
+    /**
+     * Returns current state
+     * @return int
+     */
+    public function getState()
+    {
+        return $this->state;
+    }
+
+    /**
+     * Internal - Sets current state.
+     * @param $state
+     */
+    private function setState($state)
+    {
+        $this->state = $state;
     }
 
     /**
@@ -52,22 +95,31 @@ class App {
      */
     public function isLogged()
     {
-        return count($this->current_user);
+        return $this->current_user !== null;
     }
 
     /**
-     * @return mixed
+     * @param string $callbackUrl Absolute URL which Twitter redirects to after the user
+     *                            successfully connected with the app
+     * @return string
      */
-    public function getLoginUrl()
+    public function getLoginUrl($callbackUrl = null)
     {
-        $result = $this->ttools->getAuthorizeUrl();
+        $authorizeParams = array();
+
+        if ($callbackUrl !== null) {
+            $authorizeParams['oauth_callback'] = $callbackUrl;
+        }
+
+        $result = $this->ttools->getAuthorizeUrl($authorizeParams);
         $this->storage->storeRequestSecret($result['token'], $result['secret']);
-       
+
         return $result['auth_url'];
     }
 
     /**
-     * @return array|mixed
+     * Gets the current logged user, if any.
+     * @return User
      */
     public function getCurrentUser()
     {
@@ -75,6 +127,7 @@ class App {
     }
 
     /**
+     * Gets information about the last request.
      * @return array
      */
     public function getLastReqInfo()
@@ -83,29 +136,46 @@ class App {
     }
 
     /**
-     * @return array|mixed
+     * Retrieves the Twitter User. If there's no logged user yet, it will
+     * check if the user is coming back from the Twitter Auth page and
+     * retrieve its tokens.
+     *
+     * @return User Returns a TTools User object or null if there's no logged user.
      */
     public function getUser()
     {
-        $user = array();
-        if ($this->ttools->getState()) {
-            $user = $this->getCredentials();
-        } else {
+        if (! $this->getState()) {
             $oauth_verifier = $this->request->get('oauth_verifier');
             if ($oauth_verifier !== null) {
+                $this->setState(App::STATE_AUTHORIZED);
 
                 $secret = $this->storage->getRequestSecret();
                 $oauth_token = $this->request->get('oauth_token');
-                $tokens = $this->ttools->getAccessTokens($oauth_token, $secret, $oauth_verifier);
+                $credentials = $this->ttools->getAccessTokens($oauth_token, $secret, $oauth_verifier);
 
-                if (!empty($tokens['access_token'])) {
-                    $this->storage->storeLoggedUser($tokens);
-                    $user = $this->getCredentials();
+                if (!empty($credentials['access_token'])) {
+                    if (!$this->strip_credentials) {
+                        $credentials = array_merge($credentials, $this->getCredentials());
+                    }
+
+                    $this->storage->storeLoggedUser($credentials);
+                    $this->setState(App::STATE_LOGGED);
                 }
             }
         }
 
-        return $user;
+        return $this->getLoggedUser();
+    }
+
+    /**
+     * Returns a User object with ArrayAccess. Returns null if theres no logged user.
+     * @return User
+     */
+    public function getLoggedUser()
+    {
+        $credentials = $this->storage->getLoggedUser();
+
+        return is_array($credentials) ? new User($credentials) : null;
     }
 
     /**
@@ -121,7 +191,7 @@ class App {
      * @param $path
      * @param array $params
      * @param array $config
-     * @return array|mixed
+     * @return array
      */
     public function get($path, $params = array(), $config = array())
     {
@@ -134,7 +204,7 @@ class App {
      * @param $params
      * @param bool $multipart
      * @param array $config
-     * @return array|mixed
+     * @return array
      */
     public function post($path, $params, $multipart = false, $config = array())
     {
@@ -142,7 +212,30 @@ class App {
     }
 
     /**
-     * @return array|mixed
+     * Gets a user profile. If you want to get another user's profile, you just need to provide an array with either
+     * the 'user_id' or the 'screen_name' .
+     *
+     * Example:
+     * <code>
+     * $profile = $ttools->getProfile(array('screen_name' => 'erikaheidi));
+     * </code>
+     *
+     * @param array $params The twitter user ID or screen_name(optional)
+     * @return array
+     *
+     */
+    public function getProfile(array $params = null)
+    {
+        if (count($params)) {
+            return $this->get('/users/show.json', $params);
+        }
+
+        return $this->getCredentials();
+    }
+
+    /**
+     * Get logged user profile
+     * @return array
      */
     public function getCredentials()
     {
@@ -152,7 +245,8 @@ class App {
     }
 
     /**
-     * @return array|mixed
+     * Returns information about the API usage and how many calls you have left.
+     * @return array
      */
     public function getRemainingCalls()
     {
@@ -160,8 +254,9 @@ class App {
     }
 
     /**
+     * Gets the home timeline for current authenticated user
      * @param int $limit
-     * @return array|mixed
+     * @return array
      */
     public function getTimeline($limit = 10)
     {
@@ -173,7 +268,7 @@ class App {
      * @param null $user_id      If specified, will try to get this user id tweets
      * @param null $screen_name  If specified, will try to get this user screen_name tweets
      * @param int $limit
-     * @return array|mixed
+     * @return array
      */
     public function getUserTimeline($user_id = null, $screen_name = null, $limit = 10)
     {
@@ -188,9 +283,9 @@ class App {
     }
 
     /**
-     * Gets current user mentions
+     * Gets mentions for the current user
      * @param int $limit
-     * @return array|mixed
+     * @return array
      */
     public function getMentions($limit = 10)
     {
@@ -200,7 +295,7 @@ class App {
     /**
      * Gets current user favorites
      * @param int $limit
-     * @return array|mixed
+     * @return array
      */
     public function getFavorites($limit = 10)
     {
@@ -210,7 +305,7 @@ class App {
     /**
      * Gets a specific Tweet
      * @param string $tweet_id The tweet id
-     * @return array|mixed
+     * @return array
      */
     public function getTweet($tweet_id)
     {
@@ -237,9 +332,11 @@ class App {
 
     /**
      * Post a tweet
-     * @param string $message   The tweet message
-     * @param null $in_reply_to A tweet id that this post is replying to (default null)
-     * @return array|mixed
+     * @param string $message      The tweet message
+     * @param string $in_reply_to [optional] A tweet id that this post is replying to. Twitter ignores this param
+     * if you don't mention the user in the tweet message.
+     *
+     * @return array
      */
     public function update($message, $in_reply_to = null)
     {
@@ -255,8 +352,10 @@ class App {
      * Post a tweet with an image embedded
      * @param string $image     Path to the image file
      * @param string $message   Message to be posted with the image
-     * @param null $in_reply_to A tweet id that this post is replying to (default null)
-     * @return array|mixed
+     * @param string $in_reply_to [optional] A tweet id that this post is replying to. Twitter ignores this param
+     * if you don't mention the user in the tweet message.
+     *
+     * @return array
      */
     public function updateWithMedia($image, $message, $in_reply_to = null)
     {
@@ -265,6 +364,7 @@ class App {
 
         return $this->post('/statuses/update_with_media.json', array(
             'status'  => $message,
+            'in_reply_to_status_id' => $in_reply_to,
             'media[]' => '@' . $image . ';type=' . $meta['mime']
         ), true);
     }
