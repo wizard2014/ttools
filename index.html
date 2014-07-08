@@ -32,73 +32,72 @@
     <div id="main_content_wrap" class="outer">
       <section id="main_content" class="inner">
         <h1>
-<a name="ttools-20" class="anchor" href="#ttools-20"><span class="octicon octicon-link"></span></a>ttools 2.0</h1>
+<a name="ttools-21" class="anchor" href="#ttools-21"><span class="octicon octicon-link"></span></a>ttools 2.1</h1>
 
 <p>TTools (Twitter Tools) Library aims to make life easier for twitter app developers, providing a simple workflow for authentication, while maintaining a high-level of flexibility for various types of applications.</p>
 
 <h1>
-<a name="installation-via-composer" class="anchor" href="#installation-via-composer"><span class="octicon octicon-link"></span></a>Installation via composer</h1>
+<a name="installation-via-composer" class="anchor" href="#installation-via-composer"><span class="octicon octicon-link"></span></a>Installation via Composer</h1>
 
 <p>Add this requirement to your composer.json file:</p>
 
 <pre>
 {
     "require": {
-            "ttools/ttools": "dev-master"
+            "ttools/ttools": "2.1.*"
     }
 }
 
 </pre>
 
 <h1>
-<a name="basic-usage" class="anchor" href="#basic-usage"><span class="octicon octicon-link"></span></a>basic usage</h1>
+<a name="basic-usage" class="anchor" href="#basic-usage"><span class="octicon octicon-link"></span></a>Basic Usage</h1>
 
-<p>The most basic usage example of TTools is for single-user Twitter apps, like Twitter bots.</p>
+<h3>
+<a name="static-apps" class="anchor" href="#static-apps"><span class="octicon octicon-link"></span></a>Static Apps</h3>
 
-<pre>
+<pre><code>&lt;?php
 $config = array(
     'consumer_key'        =&gt; 'APP_CONSUMER_KEY',
     'consumer_secret'     =&gt; 'APP_CONSUMER_SECRET',
-    'access_token'        =&gt; 'USER_TOKEN',
-    'access_token_secret' =&gt; 'USER_TOKEN_SECRET',
+    'access_token'        =&gt; 'USER_ACCESS_TOKEN',
+    'access_token_secret' =&gt; 'USER_ACCESS_TOKEN_SECRET',
 );
+
 $app = new \TTools\App($config);
-echo "user info";
-print_r($app-&gt;getCurrentUser());
+$user = $app-&gt;getCredentials();
 
-echo "last req info";
-print_r($app-&gt;getLastReqInfo());
-</pre>
+echo "This is the static user:&lt;br&gt;&lt;pre&gt;";
+print_r($user);
+echo "&lt;/pre&gt;";
+</code></pre>
 
-<h1>
-<a name="making-some-requests" class="anchor" href="#making-some-requests"><span class="octicon octicon-link"></span></a>making some requests</h1>
+<h3>
+<a name="multi-user-apps-with-authentication" class="anchor" href="#multi-user-apps-with-authentication"><span class="octicon octicon-link"></span></a>Multi User Apps (with authentication)</h3>
 
-<p>TTools come with some helper methods to make it easy to get data from the Twitter API. Some snippets bellow:</p>
+<pre><code>&lt;?php
+$config = array(
+    'consumer_key'  =&gt; 'APP_CONSUMER_KEY',
+    'consumer_secret' =&gt; 'APP_CONSUMER_SECRET'
+);
 
-<p><strong>getting user timeline</strong></p>
+$app = new \TTools\App($config);
 
-<pre>
-$timeline = $app-&gt;getTimeline();
-print_r($timeline);
-</pre>
+if ($app-&gt;isLogged()) {
+    $user = $app-&gt;getCurrentUser();
 
-<p><strong>getting user mentions</strong></p>
+    echo "This is the logged user:&lt;br&gt;&lt;pre&gt;";
+    print_r($user);
+    echo "&lt;/pre&gt;";
 
-<pre>
-$mentions = $app-&gt;getMentions();
-print_r($mentions);
-</pre>
-
-<p><strong>updating with photo</strong></p>
-
-<pre>
-$app-&gt;updateWithMedia('path_to_my_awesome_image', 'This is my awesome image');
-</pre>
-
-<p>Pretty easy, huh?</p>
+} else {
+    $login_url = $app-&gt;getLoginUrl();
+    echo 'Please log in: &lt;a href="'. $login_url . '"&gt;' . $login_url . '&lt;/a&gt;';
+}
+</code></pre>
 
 <h1>
-<a name="basic-docs" class="anchor" href="#basic-docs"><span class="octicon octicon-link"></span></a>basic docs</h1>
+<a name="docs" class="anchor" href="#docs"><span class="octicon octicon-link"></span></a>docs</h1>
 
 <ul>
 <li><a href="https://github.com/ttools/ttools/blob/master/doc/getting_started.md">Getting Started</a></li>
@@ -106,7 +105,7 @@ $app-&gt;updateWithMedia('path_to_my_awesome_image', 'This is my awesome image')
 <li><a href="https://github.com/ttools/ttools/blob/master/doc/basic_multiuser.md">Basic multi-user (with auth) Application</a></li>
 <li><a href="https://github.com/ttools/ttools/blob/master/doc/example_symfony.md">Symfony example</a></li>
 <li><a href="https://github.com/ttools/ttools/blob/master/doc/laravel_example.md">Laravel example</a></li>
-<li><a href="https://github.com/ttools/ttools/blob/master/doc/making_requests.md">Making requests to the Twitter API</a></li>
+<li><a href="https://github.com/ttools/ttools/blob/master/doc/making_requests.md">Making Requests to the Twitter API</a></li>
 </ul>
       </section>
     </div>
