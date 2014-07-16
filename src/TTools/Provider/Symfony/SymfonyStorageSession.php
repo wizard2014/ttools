@@ -9,7 +9,7 @@ class SymfonyStorageSession implements StorageProviderInterface
     private $session;
 
     const KEY_TOKEN  = 'ttools_last_token';
-    const KEY_SECRET = 'ttols_last_secret';
+    const KEY_SECRET = 'ttools_last_secret';
     const KEY_USER   = 'ttools_logged_user';
 
     function __construct($session)
@@ -17,11 +17,11 @@ class SymfonyStorageSession implements StorageProviderInterface
         $this->session = $session;
     }
 
-	function storeRequestSecret($request_token, $request_secret)
-	{
+    function storeRequestSecret($request_token, $request_secret)
+    {
         $this->session->set(self::KEY_TOKEN, $request_token);
         $this->session->set(self::KEY_SECRET, $request_secret);
-	}
+    }
 
     function getRequestSecret()
     {

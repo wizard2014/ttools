@@ -9,7 +9,7 @@ class LaravelStorageSession implements StorageProviderInterface
     private $session;
 
     const KEY_TOKEN  = 'ttools_last_token';
-    const KEY_SECRET = 'ttols_last_secret';
+    const KEY_SECRET = 'ttools_last_secret';
     const KEY_USER   = 'ttools_logged_user';
 
     public function __construct($session)

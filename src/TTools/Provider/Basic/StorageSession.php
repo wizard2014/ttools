@@ -7,14 +7,14 @@ use TTools\Provider\StorageProviderInterface;
 class StorageSession implements StorageProviderInterface {
 
     const KEY_TOKEN  = 'ttools_last_token';
-    const KEY_SECRET = 'ttols_last_secret';
+    const KEY_SECRET = 'ttools_last_secret';
     const KEY_USER   = 'ttools_logged_user';
 
-	function storeRequestSecret($request_token, $request_secret)
-	{
+    function storeRequestSecret($request_token, $request_secret)
+    {
         $_SESSION[self::KEY_TOKEN] = $request_token;
         $_SESSION[self::KEY_SECRET] = $request_secret;
-	}
+    }
 
     function getRequestSecret()
     {
