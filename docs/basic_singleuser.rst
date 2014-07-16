@@ -1,33 +1,23 @@
-Basic Usage - single user app
-======
+Single User Application
+=======================
 
 The most basic usage of TTools is for a single user application, like a Twitter Bot. As no authorization is required, you don't need to worry about Request and Session Storage.
 
 For this you will need to have all 4 keys needed to authenticate a request:
 
-- consumer_key: The application consumer key
-- consumer_secret: The application consumer secret
-- access_token: The User Access Token
-- access_token_secret: The User Access Token Secret
+- **consumer_key**: The application API Key (also known as *consumer key*)
+- **consumer_secret**: The application API Secret (also known as *consumer secret*)
+- **access_token**: The User Access Token
+- **access_token_secret**: The User Access Token Secret
 
-You can obtain this keys after registering your application on Twitter: https://dev.twitter.com 
+You can obtain these keys after registering your application on Twitter: https://dev.twitter.com. On the application details page,
+there's an option to generate the access tokens for your user.
 
-1. Installation
-=====
-
-Add ttools to your composer.json file:
-
-``"ttools/ttools": "2.1.*"``
-
-
-
-Run ``composer install`` or ``composer update`` to install TTools.
-
-2. Creating the application
-=====
+Example
+-------
 
 The code to create a single user application is very simple, you don't need to deal with Request or Session storage.
-Bellow is an example::
+Below is an example::
 
     $config = array(
         'consumer_key'        => 'APP_CONSUMER_KEY',

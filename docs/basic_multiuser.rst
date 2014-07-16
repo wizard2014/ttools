@@ -1,32 +1,21 @@
-Basic multiuser app
-======
+Multi-user Application
+======================
 
-For Authenticating users, you just need your application keys (consumer_key and consumer_secret), but you need to store tokens and deal with the request response.
+For authenticating users with Twitter, you just need the application keys (API key, a.k.a. `consumer_key`, and API secret, a.k.a `consumer_secret`), but you need to store tokens and deal with the request response.
 Luckily, TTools has a very simple workflow and comes with some default providers to deal with this.
 
-You need:
+You'll need:
 
-- consumer_key: The application consumer key
-- consumer_secret: The application consumer secret
+- **consumer_key**: The application API Key (also known as *consumer key*)
+- **consumer_secret**: The application API Secret (also known as *consumer secret*)
 
-You can obtain this keys after registering your application on Twitter: https://dev.twitter.com 
+You can obtain this keys after registering your application on Twitter: https://dev.twitter.com
 
-1. Installation
-=====
-
-Add ttools to your composer.json file:
-
-``"ttools/ttools": "2.1.*"``
-
-
-
-Run ``composer install`` or ``composer update`` to install TTools.
-
-2. Creating the application
-=====
+Example
+-------
 
 This example uses the basic providers that comes with TTools. It will use the default PHP session for storing the request keys and authenticate the user.
-After the user has succesfully authenticated, the app will print the user's timeline::
+After the user has successfully authenticated, the app will print the user's timeline::
 
     $config = array(
         'consumer_key'    => 'APP_CONSUMER_KEY',
