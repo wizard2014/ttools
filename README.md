@@ -5,6 +5,8 @@ ttools 2.1
 
 TTools (Twitter Tools) Library aims to make life easier for twitter app developers, providing a simple workflow for authentication, while maintaining a high-level of flexibility for various types of applications.
 
+For more info and detailed installation instructions, check [the documentation](http://ttools.readthedocs.org/).
+
 Installation via Composer
 =====
 
@@ -61,14 +63,4 @@ Basic Usage
         $login_url = $app->getLoginUrl();
         echo 'Please log in: <a href="'. $login_url . '">' . $login_url . '</a>';
     }
-
-docs
-=====
-
-- [Getting Started](https://github.com/ttools/ttools/blob/master/doc/getting_started.md)
-- [Basic Usage - single user Application](https://github.com/ttools/ttools/blob/master/doc/basic_singleuser.md)
-- [Basic multi-user (with auth) Application](https://github.com/ttools/ttools/blob/master/doc/basic_multiuser.md)
-- [Symfony example](https://github.com/ttools/ttools/blob/master/doc/example_symfony.md)
-- [Laravel example] (https://github.com/ttools/ttools/blob/master/doc/laravel_example.md)
-- [Making Requests to the Twitter API](https://github.com/ttools/ttools/blob/master/doc/making_requests.md)
 
