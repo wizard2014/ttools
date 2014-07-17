@@ -16,6 +16,6 @@ class SymfonyRequestProvider implements RequestProviderInterface
     public function get($var)
     {
         return $this->request->get($var);
-    } 
+    }
 
 }

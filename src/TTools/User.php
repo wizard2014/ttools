@@ -63,4 +63,4 @@ class User implements \ArrayAccess
         $this->credentials[$offset] = null;
     }
 
-} 
+}

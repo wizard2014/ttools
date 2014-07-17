@@ -56,7 +56,7 @@ class App {
         if (isset($config['access_token']) && isset($config['access_token_secret'])) {
             $this->setState(App::STATE_LOGGED_STATIC);
         } else {
-            /* check if theres a logged user in session */
+            /* check if there's a logged user in session */
             $user = $this->storage->getLoggedUser();
             if (!empty($user['access_token'])) {
                 $this->setState(App::STATE_LOGGED);
@@ -168,7 +168,7 @@ class App {
     }
 
     /**
-     * Returns a User object with ArrayAccess. Returns null if theres no logged user.
+     * Returns a User object with ArrayAccess. Returns null if there's no logged user.
      * @return User
      */
     public function getLoggedUser()

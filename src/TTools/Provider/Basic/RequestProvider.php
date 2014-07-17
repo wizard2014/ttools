@@ -10,6 +10,6 @@ class RequestProvider implements RequestProviderInterface {
     {
         if (!empty($_REQUEST[$var]))
             return $_REQUEST[$var];
-    } 
+    }
 
 }

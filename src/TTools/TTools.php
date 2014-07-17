@@ -64,14 +64,13 @@ class TTools
      * Gets the authorization url.
      *
      * @param array $params Custom parameters passed to the OAuth request
-     * @return array If successfull, returns an array with 'auth_url', 'secret' and 'token'; otherwise, returns array with error code and message.
+     * @return array If successful, returns an array with 'auth_url', 'secret' and 'token'; otherwise, returns array with error code and message.
      */
     public function getAuthorizeUrl(array $params = array())
     {
         $result = $this->OAuthRequest(self::REQUEST_PATH, $params);
 
         if ($result->getCode() == 200) {
-
             $tokens = $this->parseResponse($result->getResponse());
 
             return array(
@@ -80,10 +79,9 @@ class TTools
                 'token'    => $tokens['oauth_token']
             );
 
-         } else {
-            return $this->handleError($result);
-         }
+        }
 
+        return $this->handleError($result);
     }
 
     /**
@@ -171,12 +169,10 @@ class TTools
     {
         $result = $this->OAuthRequest($url, $params, $method, null, $multipart, $overwrite_config);
         if ($result->getCode() == 200) {
-
-        	return json_decode($result->getResponse(), 1);
-
-        } else {
-            return $this->handleError($result);
+            return json_decode($result->getResponse(), 1);
         }
+
+        return $this->handleError($result);
     }
 
     /**
