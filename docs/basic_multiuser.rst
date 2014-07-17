@@ -10,6 +10,7 @@ You'll need:
 - **consumer_secret**: The application API Secret (also known as *consumer secret*)
 
 You can obtain this keys after registering your application on Twitter: https://dev.twitter.com
+If you never created a Twitter App before, check this `step-by-step guide <app_creation.html>`_.
 
 Example
 -------

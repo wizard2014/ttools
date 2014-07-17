@@ -10,8 +10,11 @@ TTools (Twitter Tools) Library aims to make life easier for twitter app develope
    basic_singleuser
    basic_multiuser
    making_requests
+   example_silex
    example_symfony
    example_laravel
+   app_creation
+   twilex
 
 Requirements
 ------------
@@ -20,7 +23,7 @@ TTools only requires the php5-curl extension.
 Installing
 ----------
 
-Installation can be easily made through composer. Add `ttools/ttools <https://packagist.org/packages/ttools/ttools>`_ to your composer.json::
+Installation can be easily made through `Composer <https://getcomposer.org/>`_. Add `ttools/ttools <https://packagist.org/packages/ttools/ttools>`_ to your composer.json::
 
     {
         "require": {

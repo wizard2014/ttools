@@ -13,6 +13,8 @@ For this you will need to have all 4 keys needed to authenticate a request:
 You can obtain these keys after registering your application on Twitter: https://dev.twitter.com. On the application details page,
 there's an option to generate the access tokens for your user.
 
+If you never created a Twitter App before, check this `step-by-step guide <app_creation.html>`_.
+
 Example
 -------
 

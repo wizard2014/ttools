@@ -1,5 +1,5 @@
-TTools on Symfony
-=================
+TTools with Symfony
+===================
 
 This is a very basic example usage for authorizing users from a Symfony Application.
 TTools comes with Symfony **Session** and **Request** support.
