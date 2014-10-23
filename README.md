@@ -10,7 +10,9 @@ For more info and detailed installation instructions, check [the documentation](
 Installation via Composer
 =====
 
-Add this requirement to your composer.json file:
+    $ composer require ttools/ttools
+
+Or, add the requirement directly to your composer.json file:
 
 <pre>
 {
