@@ -15,7 +15,7 @@ Add this requirement to your composer.json file:
 <pre>
 {
     "require": {
-            "ttools/ttools": "2.1.*"
+            "ttools/ttools": "~2.1"
     }
 }
 
