@@ -10,11 +10,15 @@ TTools only requires the php5-curl extension.
 Installing
 ----------
 
-Installation can be easily made through `Composer <https://getcomposer.org/>`_. Add `ttools/ttools <https://packagist.org/packages/ttools/ttools>`_ to your composer.json::
+Installation can be easily made through `Composer <https://getcomposer.org/>`_:
+    
+    $ composer require ttools/ttools
+
+Or, add `ttools/ttools <https://packagist.org/packages/ttools/ttools>`_  directly to your composer.json::
 
     {
         "require": {
-            "ttools/ttools": "2.1.*"
+            "ttools/ttools": "~2.1"
         }
     }
 
